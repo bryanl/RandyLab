@@ -16,13 +16,10 @@ public abstract class Mesh {
 	private int[] tmpBuffer;
 	private IntBuffer vertices;
 	private ShortBuffer indices;
-	private ShaderCompiler shaderCompiler;
-	
-	private String vertexShaderSource;
-	private String fragmentShaderSource;
+	private ShaderCompiler shaderCompiler;	
 	private int program;
-	private int maPositionHandle;
-	private int muMVPMatrixHandle;
+
+	protected static final int FLOAT_SIZE = 4;
 
 	public Mesh(int maxVertices, int maxIndices, boolean hasColor, boolean hasTexCoords,
 			boolean hasNormals) {
@@ -30,8 +27,8 @@ public abstract class Mesh {
 		this.hasTexCoords = hasTexCoords;
 		this.hasNormals = hasNormals;
 		vertexSize = (3 + (hasColor ? 4 : 0) + (hasTexCoords ? 2 : 0) + (hasNormals ? 3
-				: 0)) * 4;
-		tmpBuffer = new int[maxVertices * vertexSize / 4];
+				: 0)) * FLOAT_SIZE;
+		tmpBuffer = new int[maxVertices * vertexSize / FLOAT_SIZE];
 
 		ByteBuffer buffer = ByteBuffer.allocateDirect(maxVertices * vertexSize);
 		buffer.order(ByteOrder.nativeOrder());
@@ -78,7 +75,10 @@ public abstract class Mesh {
 		return program;
 	}
 	
-		
+	public int getVertexSize() {
+		return vertexSize;
+	}
+	
 	protected IntBuffer getVertices() {
 		return vertices;
 	}

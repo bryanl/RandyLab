@@ -32,8 +32,12 @@
             android:label="Hello GL" >
         </activity>
         <activity
-             android:name=".HelloGLWithMeshTest"
+            android:name=".HelloGLWithMeshTest"
             android:label="Hello GL with mesh" >
+        </activity>
+        <activity
+            android:name=".HelloGLWithTextureMeshTest"
+            android:label="Hello GL with texture" >
         </activity>
     </application>
 
