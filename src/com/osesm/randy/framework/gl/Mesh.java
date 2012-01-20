@@ -5,8 +5,6 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-import android.opengl.GLES20;
-
 public abstract class Mesh {
 
 	private boolean hasColor;
@@ -89,6 +87,7 @@ public abstract class Mesh {
 
 	public abstract void prepare(float[] viewProjectionMatrix);		
 	public abstract void draw();
+	public abstract void reset();
 
 	
 

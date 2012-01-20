@@ -214,6 +214,13 @@ public class HelloGLWithMeshTest extends Activity {
 			mAngle = angle;
 		}
 
+
+		@Override
+		public void reset() {
+			// TODO Auto-generated method stub
+			
+		}
+
 	}
 
 }
