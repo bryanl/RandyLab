@@ -27,10 +27,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-           <activity
+        <activity
             android:name=".HelloGLTest"
             android:label="Hello GL" >
+        </activity>
+        <activity
+             android:name=".HelloGLWithMeshTest"
+            android:label="Hello GL with mesh" >
         </activity>
     </application>
 

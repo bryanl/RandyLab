@@ -9,7 +9,7 @@ import android.widget.ListView;
 
 public class RandyLabActivity extends ListActivity {
    
-	String tests[] = {"HelloGLTest"};
+	String tests[] = {"HelloGLTest", "HelloGLWithMeshTest"};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

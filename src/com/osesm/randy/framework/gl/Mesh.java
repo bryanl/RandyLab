@@ -5,7 +5,9 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-public class Mesh {
+import android.opengl.GLES20;
+
+public abstract class Mesh {
 
 	private boolean hasColor;
 	private boolean hasTexCoords;
@@ -14,6 +16,13 @@ public class Mesh {
 	private int[] tmpBuffer;
 	private IntBuffer vertices;
 	private ShortBuffer indices;
+	private ShaderCompiler shaderCompiler;
+	
+	private String vertexShaderSource;
+	private String fragmentShaderSource;
+	private int program;
+	private int maPositionHandle;
+	private int muMVPMatrixHandle;
 
 	public Mesh(int maxVertices, int maxIndices, boolean hasColor, boolean hasTexCoords,
 			boolean hasNormals) {
@@ -52,21 +61,35 @@ public class Mesh {
 		this.indices.flip();
 	}
 	
-	public void setVertexShader() {
-		
+	public void setShaderCompiler(ShaderCompiler shaderCompiler) {
+		this.shaderCompiler = shaderCompiler;	
 	}
 	
-	public void setFragmentShader() {
-		
+	
+	public int compile(String vertextShaderFileName, String fragmentShaderFileName) {
+		return shaderCompiler.compile(vertextShaderFileName, fragmentShaderFileName);
 	}
 	
-	public void prepare() {
-		
+	public void setProgram(int program) {
+		this.program = program;
 	}
 	
-	public void draw() {
-		
+	public int getProgram() {
+		return program;
 	}
+	
+		
+	protected IntBuffer getVertices() {
+		return vertices;
+	}
+
+	protected ShortBuffer getIndices() {
+		return indices;
+	}
+
+	public abstract void prepare(float[] viewProjectionMatrix);		
+	public abstract void draw();
+
 	
 
 	
