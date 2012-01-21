@@ -5,6 +5,8 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import android.util.Log;
+
 public abstract class Mesh {
 
 	private boolean hasColor;
@@ -16,6 +18,7 @@ public abstract class Mesh {
 	private ShortBuffer indices;
 	private ShaderCompiler shaderCompiler;	
 	private int program;
+	private Texture texture;
 
 	protected static final int FLOAT_SIZE = 4;
 
@@ -28,6 +31,8 @@ public abstract class Mesh {
 				: 0)) * FLOAT_SIZE;
 		tmpBuffer = new int[maxVertices * vertexSize / FLOAT_SIZE];
 
+		Log.d("Randy", "vertex size = " + vertexSize);
+		
 		ByteBuffer buffer = ByteBuffer.allocateDirect(maxVertices * vertexSize);
 		buffer.order(ByteOrder.nativeOrder());
 		vertices = buffer.asIntBuffer();
@@ -84,13 +89,27 @@ public abstract class Mesh {
 	protected ShortBuffer getIndices() {
 		return indices;
 	}
+	
+	public void setTexture(Texture texture) {
+		this.texture = texture;
+	}
+	
+	public Texture getTexture() {
+		return texture;
+	}
+	
+	public boolean hasTexture() {
+		return hasTexCoords;
+	}
+	
+	public boolean hasColor() {
+		return hasColor;
+	}
+	
+	public boolean hasNormals() {
+		return hasNormals;
+	}
 
 	public abstract void prepare(float[] viewProjectionMatrix);		
 	public abstract void draw();
-	public abstract void reset();
-
-	
-
-	
-	
 }
