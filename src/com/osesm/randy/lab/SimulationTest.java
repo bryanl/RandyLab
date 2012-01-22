@@ -2,6 +2,7 @@ package com.osesm.randy.lab;
 
 import com.osesm.randy.framework.Scene;
 import com.osesm.randy.framework.Simulation;
+import com.osesm.randy.framework.gl.Mesh;
 import com.osesm.randy.framework.gl.Texture;
 import com.osesm.randy.lab.R;
 
@@ -18,10 +19,10 @@ public class SimulationTest extends Simulation {
 
 	public class SimulationScene extends Scene {
 
-		private float[] mVMatrix = new float[16];
+		private float[] viewMatrix = new float[16];
 		private float[] mProjMatrix = new float[16];
-		private float[] viewProjectionMantrix = new float[16];
-		private TriangleMesh[] meshes;
+		private float[] viewProjectionMatrix = new float[16];
+		private Shape[] shapes;
 
 		public SimulationScene(Simulation simulation) {
 			super(simulation);
@@ -36,15 +37,16 @@ public class SimulationTest extends Simulation {
 		public void present(float deltaTime) {
 			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-			Matrix.multiplyMM(viewProjectionMantrix, 0, mProjMatrix, 0, mVMatrix, 0);
+			Matrix.multiplyMM(viewProjectionMatrix, 0, mProjMatrix, 0, viewMatrix, 0);
 
 			long time = SystemClock.uptimeMillis() % 4000L;
 			float angle = 0.090f * ((int) time);
 
-			for (int i = 0; i < meshes.length; i++) {
-				((TriangleMesh) meshes[i]).setAngle(i == 0 ? angle : -angle);
-				meshes[i].prepare(viewProjectionMantrix);
-				meshes[i].draw();
+			for (int i = 0; i < shapes.length; i++) {
+				((Shape) shapes[i]).setAngle(i == 0 ? angle : -angle);
+				shapes[i].setProjectionMatrix(viewProjectionMatrix);
+				shapes[i].update();
+				shapes[i].draw();
 			}
 		}
 
@@ -59,7 +61,7 @@ public class SimulationTest extends Simulation {
 			GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 			initShapes();
 
-			Matrix.setLookAtM(mVMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 2.0f, 0.0f);
+			Matrix.setLookAtM(viewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 2.0f, 0.0f);
 		}
 
 		@Override
@@ -84,16 +86,19 @@ public class SimulationTest extends Simulation {
 
 			Texture texture = new Texture(simulation, R.raw.basic_texture);
 
-			meshes = new TriangleMesh[2];
+			shapes = new Shape[2];
+			Mesh mesh;
 
-			meshes[1] = new TriangleMesh(simulation, 15, 6, false, true, false);
-			meshes[1].setVertices(triangle1Coords, 0, triangle1Coords.length);
-			meshes[1].setIndices(triangleIndices, 0, triangleIndices.length);
-			meshes[1].setTexture(texture);
+			mesh = new Mesh(simulation, 15, 6, false, true, false);
+			mesh.setVertices(triangle1Coords, 0, triangle1Coords.length);
+			mesh.setIndices(triangleIndices, 0, triangleIndices.length);
+			mesh.setTexture(texture);
+			shapes[1] = new Shape(mesh);
 
-			meshes[0] = new TriangleMesh(simulation, 21, 6, true, false, false);
-			meshes[0].setVertices(triangle2Coords, 0, triangle2Coords.length);
-			meshes[0].setIndices(triangleIndices, 0, triangleIndices.length);
+			mesh = new Mesh(simulation, 21, 6, true, false, false);
+			mesh.setVertices(triangle2Coords, 0, triangle2Coords.length);
+			mesh.setIndices(triangleIndices, 0, triangleIndices.length);
+			shapes[0] = new Shape(mesh);
 		}
 
 	}
