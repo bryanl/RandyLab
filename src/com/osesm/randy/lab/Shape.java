@@ -7,13 +7,24 @@ import com.osesm.randy.framework.gl.Mesh;
 
 class Shape extends WorldObject {
 
+	private static long nextId = 0;
 	private float angle;
+	private long id;
+	
+	public static long nextId() {
+		return nextId++;
+	}
 
 	public Shape() {
 	}
 
 	public Shape(Mesh mesh) {
 		setMesh(mesh);
+		this.id = nextId();
+	}
+
+	public long getId() {
+		return id;
 	}
 
 	public void setAngle(float angle) {

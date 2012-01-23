@@ -4,12 +4,14 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
-
-import com.osesm.randy.framework.Simulation;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
+
+import com.osesm.randy.framework.Simulation;
 
 public class Mesh {
 
@@ -26,12 +28,8 @@ public class Mesh {
 	private int program;
 	private Texture texture;
 
-	private int maPositionHandle;
-	private int maTextureHandle;
-	private int maColorHandle;
-	private int msTextureHandle;
+	Map<String, Integer> handles;
 
-	private int muMVPMatrixHandle;
 	private float[] modelMatrix = new float[16];
 	private float[] mMVPMatrix = new float[16];
 
@@ -43,7 +41,9 @@ public class Mesh {
 	public Mesh(Simulation simulation, int maxVertices, int maxIndices, boolean hasColor,
 			boolean hasTexCoords, boolean hasNormals) {
 
-		setShaderCompiler(simulation.getShaderCompiler());
+		shaderCompiler = simulation.getShaderCompiler();
+		
+		handles = new HashMap<String, Integer>();
 
 		this.hasColor = hasColor;
 		this.hasTexCoords = hasTexCoords;
@@ -52,7 +52,7 @@ public class Mesh {
 				: 0)) * FLOAT_SIZE;
 		tmpBuffer = new int[maxVertices * vertexSize / FLOAT_SIZE];
 
-		Log.d("Randy", "vertex size = " + vertexSize);
+		simulation.debug("vertex size = " + vertexSize);
 
 		ByteBuffer buffer = ByteBuffer.allocateDirect(maxVertices * vertexSize);
 		buffer.order(ByteOrder.nativeOrder());
@@ -82,32 +82,8 @@ public class Mesh {
 		this.indices.flip();
 	}
 
-	public void setShaderCompiler(ShaderCompiler shaderCompiler) {
-		this.shaderCompiler = shaderCompiler;
-	}
-
 	public void compile(String vertextShaderFileName, String fragmentShaderFileName) {
 		program = shaderCompiler.compile(vertextShaderFileName, fragmentShaderFileName);
-	}
-
-	public void setProgram(int program) {
-		this.program = program;
-	}
-
-	public int getProgram() {
-		return program;
-	}
-
-	public int getVertexSize() {
-		return vertexSize;
-	}
-
-	protected IntBuffer getVertices() {
-		return vertices;
-	}
-
-	protected ShortBuffer getIndices() {
-		return indices;
 	}
 
 	public void setTexture(Texture texture) {
@@ -119,7 +95,7 @@ public class Mesh {
 	}
 
 	public boolean hasTexture() {
-		return hasTexCoords;
+		return texture != null;
 	}
 
 	public boolean hasColor() {
@@ -131,60 +107,67 @@ public class Mesh {
 	}
 
 	public void prepare(float[] viewProjectionMatrix) {
-		maPositionHandle = GLES20.glGetAttribLocation(getProgram(), "aPosition");
+		handles.put("aPosition", GLES20.glGetAttribLocation(program, "aPosition"));
 
 		if (hasTexture()) {
-			maTextureHandle = GLES20.glGetAttribLocation(getProgram(), "aTextureCoord");
-			msTextureHandle = GLES20.glGetAttribLocation(getProgram(), "sTexture");
+			handles.put("aTextureCoord", GLES20.glGetAttribLocation(program, "aTextureCoord"));
+			handles.put("sTexture", GLES20.glGetAttribLocation(program, "sTexture"));
 		} else {
-			maColorHandle = GLES20.glGetAttribLocation(getProgram(), "SourceColor");
+			handles.put("aColor", GLES20.glGetAttribLocation(program, "SourceColor"));
 		}
 
-		muMVPMatrixHandle = GLES20.glGetUniformLocation(getProgram(), "uMVPMatrix");
+		handles.put("uMVPMatrix", GLES20.glGetUniformLocation(program, "uMVPMatrix"));
 		Matrix.multiplyMM(mMVPMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0);
 	}
-	
+
 	public void setModelMatrix(float[] matrix) {
 		modelMatrix = matrix;
 	}
-	
+
 	public float[] getModelMatrix() {
 		return modelMatrix;
 	}
 
 	public void draw() {
-		GLES20.glUseProgram(getProgram());
+		GLES20.glUseProgram(program);
 
 		if (hasTexture()) {
 			getTexture().bind();
 		}
 
-		getVertices().position(VERTICES_OFFSET);
-		GLES20.glVertexAttribPointer(maPositionHandle, 3, GLES20.GL_FLOAT, false,
-				getVertexSize(), getVertices());
+		vertices.position(VERTICES_OFFSET);
+		GLES20.glVertexAttribPointer(handles.get("aPosition"), 3, GLES20.GL_FLOAT, false,
+				vertexSize, vertices);
 		checkGlError("position vertex attrib pointer");
-		GLES20.glEnableVertexAttribArray(maPositionHandle);
+		GLES20.glEnableVertexAttribArray(handles.get("aPosition"));
 		checkGlError("enable position vertex array");
 
-		if (hasTexture()) {
-			getVertices().position(UV_OFFSET);
-			GLES20.glVertexAttribPointer(maTextureHandle, 2, GLES20.GL_FLOAT, false,
-					getVertexSize(), getVertices());
-			checkGlError("texture vertex attrib pointer");
-			GLES20.glEnableVertexAttribArray(maTextureHandle);
-			checkGlError("enable texture vertex array");
-		} else {
-			getVertices().position(COLOR_OFFSET);
-			GLES20.glVertexAttribPointer(maColorHandle, 4, GLES20.GL_FLOAT, false,
-					getVertexSize(), getVertices());
+		if (hasColor) {
+			vertices.position(COLOR_OFFSET);
+			GLES20.glVertexAttribPointer(handles.get("aColor"), 4, GLES20.GL_FLOAT, false,
+					vertexSize, vertices);
 			checkGlError("color vertex attrib pointer");
-			GLES20.glEnableVertexAttribArray(maColorHandle);
+			GLES20.glEnableVertexAttribArray(handles.get("aColor"));
 			checkGlError("enable color vertex array");
+		} else if (hasTexCoords) {
+			vertices.position(UV_OFFSET);
+			GLES20.glVertexAttribPointer(handles.get("aTextureCoord"), 2, GLES20.GL_FLOAT, false,
+					vertexSize, vertices);
+			checkGlError("texture vertex attrib pointer");
+			GLES20.glEnableVertexAttribArray(handles.get("aTextureCoord"));
+			checkGlError("enable texture vertex array");
 		}
 
-		GLES20.glUniformMatrix4fv(muMVPMatrixHandle, 1, false, mMVPMatrix, 0);
-		GLES20.glDrawElements(GLES20.GL_TRIANGLES, 6, GLES20.GL_UNSIGNED_SHORT,
-				getIndices());
+		GLES20.glUniformMatrix4fv(handles.get("uMVPMatrix"), 1, false, mMVPMatrix, 0);
+
+		if (indices == null) {
+			GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertices.limit());
+			checkGlError("drawArrays");
+		} else {
+			GLES20.glDrawElements(GLES20.GL_TRIANGLES, 6, GLES20.GL_UNSIGNED_SHORT,
+					indices);
+			checkGlError("drawElements");
+		}
 	}
 
 	private void checkGlError(String op) {

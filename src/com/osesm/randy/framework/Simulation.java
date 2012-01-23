@@ -9,9 +9,12 @@ import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
+import android.util.Log;
 
 public abstract class Simulation extends Activity implements Renderer {
 
+	private static final String TAG = "RandyLab";
+	
 	enum SimulationState {
 		Initialized, Running, Paused, Finished, Idle
 	}
@@ -25,6 +28,10 @@ public abstract class Simulation extends Activity implements Renderer {
 
 	long startTime = System.nanoTime();
 	private ShaderCompiler shaderCompiler;
+	
+	public void debug(String message) {
+		Log.d(TAG, message);
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

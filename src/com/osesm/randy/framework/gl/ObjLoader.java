@@ -7,11 +7,15 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.os.SystemClock;
+
 import com.osesm.randy.framework.Simulation;
 
 public class ObjLoader {
 
 	public static Mesh load(Simulation simulation, String file) {
+		long start = SystemClock.uptimeMillis();
+
 		InputStream in = null;
 		try {
 			in = simulation.getFileIO().readAsset(file);
@@ -119,8 +123,15 @@ public class ObjLoader {
 				}
 			}
 
-			Mesh model = new Mesh(simulation, numFaces * 3, 0, false, numUV > 0, numNormals > 0);
+			simulation.debug("maxVertices[" + numFaces * 3 + "] hasTexture["
+					+ (numUV > 0) + "] hasNormals[" + (numNormals > 0) + "]");
+			Mesh model = new Mesh(simulation, numFaces * 3, 0, false, numUV > 0,
+					numNormals > 0);
 			model.setVertices(verts, 0, verts.length);
+
+			simulation.debug("Loaded obj " + file + " in "
+					+ (SystemClock.uptimeMillis() - start) + " milliseconds");
+
 			return model;
 		} catch (Exception ex) {
 			throw new RuntimeException("couldn't load '" + file + "'", ex);
