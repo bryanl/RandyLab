@@ -1,5 +1,7 @@
 package com.osesm.randy.lab;
 
+import java.util.Random;
+
 import android.opengl.Matrix;
 
 import com.osesm.randy.framework.WorldObject;
@@ -10,15 +12,12 @@ class Shape extends WorldObject {
 	private static long nextId = 0;
 	private float angle;
 	private long id;
-	
+
 	public static long nextId() {
 		return nextId++;
 	}
 
-	public Shape() {
-	}
-
-	public Shape(Mesh mesh) {
+	public Shape(Mesh mesh) {		
 		setMesh(mesh);
 		this.id = nextId();
 	}
@@ -46,7 +45,7 @@ class Shape extends WorldObject {
 
 	@Override
 	public void update() {
-		Matrix.setRotateM(getMesh().getModelMatrix(), 0, angle, 0, 0, 1.0f);
+		Matrix.setRotateM(getMesh().getModelMatrix(), 0, angle, 0, 0, 1.0f);		
 		getMesh().prepare(getProjectionMatrix());
 	}
 
