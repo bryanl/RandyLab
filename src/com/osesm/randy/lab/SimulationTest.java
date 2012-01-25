@@ -6,6 +6,7 @@ import java.util.List;
 import android.opengl.GLES20;
 import android.os.SystemClock;
 
+import com.osesm.randy.framework.FPSCounter;
 import com.osesm.randy.framework.Scene;
 import com.osesm.randy.framework.Simulation;
 import com.osesm.randy.framework.gl.Camera;
@@ -22,12 +23,14 @@ public class SimulationTest extends Simulation {
 
 	public class SimulationScene extends Scene {
 
-
 		List<Shape> shapes;
 		private Camera camera;
+		private FPSCounter fpscounter;
 
 		public SimulationScene(Simulation simulation) {
 			super(simulation);
+			
+			fpscounter = new FPSCounter(simulation);
 		}
 
 		@Override
@@ -50,6 +53,8 @@ public class SimulationTest extends Simulation {
 				shape.update();
 				shape.draw();
 			}
+			
+			fpscounter.logFrame();
 		}
 
 		@Override

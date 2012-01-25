@@ -4,17 +4,21 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.osesm.randy.framework.gl.ShaderCompiler;
+import com.osesm.randy.lab.R;
 
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
 
 public abstract class Simulation extends Activity implements Renderer {
 
 	private static final String TAG = "RandyLab";
-	
+
 	enum SimulationState {
 		Initialized, Running, Paused, Finished, Idle
 	}
@@ -28,23 +32,50 @@ public abstract class Simulation extends Activity implements Renderer {
 
 	long startTime = System.nanoTime();
 	private ShaderCompiler shaderCompiler;
-	
+	private TextView statusBar;
+
 	public void debug(String message) {
 		Log.d(TAG, message);
+	}
+
+	public void setStatus(final String message) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				statusBar.setText(message);
+			}
+		});
+
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
 
-		glView = new GLSurfaceView(this);
-		glView.setEGLContextClientVersion(2);
-		glView.setRenderer(this);
+		RelativeLayout view = (RelativeLayout) findViewById(R.id.container);
 		
-		setContentView(glView);
+		addGLSurface(view);
+		addStatusBar(view);
 
 		fileIO = new FileIO(getAssets());
 		shaderCompiler = new ShaderCompiler(getAssets());
+	}
+
+	private void addStatusBar(RelativeLayout view) {
+		RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		statusBar = new TextView(this);
+		statusBar.setText("frames per second: 999");
+
+		relativeParams.addRule(RelativeLayout.ALIGN_BOTTOM, glView.getId());
+		view.addView(statusBar, relativeParams);
+	}
+
+	private void addGLSurface(RelativeLayout view) {
+		glView = new GLSurfaceView(this);
+		glView.setEGLContextClientVersion(2);
+		glView.setRenderer(this);
+		view.addView(glView);
 	}
 
 	@Override
@@ -121,7 +152,7 @@ public abstract class Simulation extends Activity implements Renderer {
 	public FileIO getFileIO() {
 		return fileIO;
 	}
-	
+
 	public ShaderCompiler getShaderCompiler() {
 		return shaderCompiler;
 	}
