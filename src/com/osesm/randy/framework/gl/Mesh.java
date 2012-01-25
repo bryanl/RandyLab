@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.opengl.GLES20;
-import android.opengl.Matrix;
 import android.util.Log;
 
 import com.osesm.randy.framework.Simulation;
+import com.osesm.randy.framework.math.Matrix4;
 
 public class Mesh {
 
@@ -29,10 +29,11 @@ public class Mesh {
 	private Texture texture;
 
 	Map<String, Integer> handles;
-
-	private float[] modelMatrix = new float[16];
-	private float[] mMVPMatrix = new float[16];
-
+	
+	private Matrix4 modelMatrix = new Matrix4();
+	private Matrix4 mMVPMatrix = new Matrix4();
+	
+	
 	private static final int VERTICES_OFFSET = 0;
 	private static final int UV_OFFSET = 3;
 	private static final int COLOR_OFFSET = 3;
@@ -106,7 +107,7 @@ public class Mesh {
 		return hasNormals;
 	}
 
-	public void prepare(float[] viewProjectionMatrix) {
+	public void prepare(Matrix4 viewProjectionMatrix) {
 		handles.put("aPosition", GLES20.glGetAttribLocation(program, "aPosition"));
 
 		if (hasTexture()) {
@@ -117,14 +118,14 @@ public class Mesh {
 		}
 
 		handles.put("uMVPMatrix", GLES20.glGetUniformLocation(program, "uMVPMatrix"));
-		Matrix.multiplyMM(mMVPMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0);
+		mMVPMatrix = viewProjectionMatrix.multiplyByMatrix(modelMatrix);
 	}
 
-	public void setModelMatrix(float[] matrix) {
+	public void setModelMatrix(Matrix4 matrix) {
 		modelMatrix = matrix;
 	}
 
-	public float[] getModelMatrix() {
+	public Matrix4 getModelMatrix() {
 		return modelMatrix;
 	}
 
@@ -158,7 +159,7 @@ public class Mesh {
 			checkGlError("enable texture vertex array");
 		}
 
-		GLES20.glUniformMatrix4fv(handles.get("uMVPMatrix"), 1, false, mMVPMatrix, 0);
+		GLES20.glUniformMatrix4fv(handles.get("uMVPMatrix"), 1, false, mMVPMatrix.getValues(), 0);
 
 		if (indices == null) {
 			GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertices.limit());

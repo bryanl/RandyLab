@@ -1,42 +1,42 @@
 package com.osesm.randy.framework.gl;
 
+import com.osesm.randy.framework.math.Matrix4;
+
 import android.opengl.Matrix;
 
 public class Camera {
 
 	private int height;
 	private int width;
-	private float[] viewMatrix = new float[16];
-	float[] projectionMatrix = new float[16];
+	private Matrix4 viewMatrix = new Matrix4();
+	private Matrix4 projectionMatrix = new Matrix4();
 
 	public Camera(int width, int height) {
 		this.width = width;
 		this.height = height;
 
-		Matrix.setLookAtM(viewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 2.0f, 0.0f);
+		Matrix.setLookAtM(viewMatrix.getValues(), 0, 0, 0, -3, 0f, 0f, 0f, 0f, 2.0f, 0.0f);
 
 	}
 
-	public float[] getViewProjectionMatrix() {
-		float[] viewProjectionMatrix = new float[16];
-
-		Matrix.multiplyMM(viewProjectionMatrix, 0, getProjection(), 0, getView(), 0);
+	public Matrix4 getViewProjectionMatrix() {
+		Matrix4 viewProjectionMatrix = getProjection().multiplyByMatrix(getView());
 		return viewProjectionMatrix;
 	}
 
 	public void rotate(float angle) {
-		Matrix.rotateM(viewMatrix, 0, angle, 0.2f, 0f, 0f);
+		viewMatrix.rotate(angle, 0.2f, 0, 0);
 	}
 
-	private float[] getProjection() {
+	private Matrix4 getProjection() {
 		float ratio = (float) width / height;
-		Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1, 1, 1, 7);
+		Matrix.frustumM(projectionMatrix.getValues(), 0, -ratio, ratio, -1, 1, 1, 7);
 		// Matrix.orthoM(projectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
 
 		return projectionMatrix;
 	}
 
-	private float[] getView() {
+	private Matrix4 getView() {
 
 		return viewMatrix;
 

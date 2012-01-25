@@ -1,8 +1,6 @@
 package com.osesm.randy.lab;
 
-import java.util.Random;
-
-import android.opengl.Matrix;
+import android.util.Log;
 
 import com.osesm.randy.framework.WorldObject;
 import com.osesm.randy.framework.gl.Mesh;
@@ -29,7 +27,7 @@ class Shape extends WorldObject {
 	public void setAngle(float angle) {
 		this.angle = angle;
 	}
-
+	
 	@Override
 	public void setMesh(Mesh mesh) {
 		super.setMesh(mesh);
@@ -45,7 +43,8 @@ class Shape extends WorldObject {
 
 	@Override
 	public void update() {
-		Matrix.setRotateM(getMesh().getModelMatrix(), 0, angle, 0, 0, 1.0f);		
+		Log.d("RandyLab", "model matrix = " + getMesh().getModelMatrix());
+		getMesh().getModelMatrix().rotate(angle, 0, 0, 1.0f);
 		getMesh().prepare(getProjectionMatrix());
 	}
 
