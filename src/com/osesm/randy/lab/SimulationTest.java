@@ -29,7 +29,7 @@ public class SimulationTest extends Simulation {
 
 		public SimulationScene(Simulation simulation) {
 			super(simulation);
-			
+
 			fpscounter = new FPSCounter(simulation);
 		}
 
@@ -45,15 +45,15 @@ public class SimulationTest extends Simulation {
 			long time = SystemClock.uptimeMillis() % 4000L;
 			float angle = 0.090f * ((int) time);
 
-			camera.rotate(0.375f);
-			
+			// camera.rotate(angle);
+
 			for (Shape shape : shapes) {
 				shape.setAngle(shape.getId() % 2 == 0 ? angle : -angle);
 				shape.setProjectionMatrix(camera.getViewProjectionMatrix());
 				shape.update();
 				shape.draw();
 			}
-			
+
 			fpscounter.logFrame();
 		}
 
@@ -77,8 +77,8 @@ public class SimulationTest extends Simulation {
 
 		@Override
 		public void changed(int width, int height) {
-			GLES20.glViewport(0, 0, width, height);			
-			camera = new Camera(width, height);			
+			GLES20.glViewport(0, 0, width, height);
+			camera = new Camera(width, height);
 		}
 
 		private void initShapes() {
@@ -86,15 +86,15 @@ public class SimulationTest extends Simulation {
 
 			float triangle1Coords[] = { -0.5f, -0.25f, 0.5f, 0f, 0f, 0.5f, -0.25f, 0.5f, 1f, 0f, 0.0f, 0.559016994f, 0.5f, 0.5f, 1f };
 			float triangle2Coords[] = { -0.7f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.3f, -0.25f, 0.25f, 0.0f, 0.0f, 1.0f, 1.0f, -0.2f, 0.559016994f, 0.2f, 1.0f, 0.0f, 0.0f, 1.0f };
-			
+
 			Texture texture = new Texture(simulation, R.raw.basic_texture);
 
 			shapes = new ArrayList<Shape>();
 			Mesh mesh;
 
-//			mesh = ObjLoader.load(simulation, "sphere.obj");
-//			shapes.add(new Shape(mesh));
-//
+			// mesh = ObjLoader.load(simulation, "sphere.obj");
+			// shapes.add(new Shape(mesh));
+			//
 			mesh = new Mesh(simulation, 15, 6, false, true, false);
 			mesh.setVertices(triangle1Coords, 0, triangle1Coords.length);
 			mesh.setIndices(triangleIndices, 0, triangleIndices.length);
@@ -109,7 +109,7 @@ public class SimulationTest extends Simulation {
 			mesh = ObjLoader.load(simulation, "sphere.obj");
 			mesh.setTexture(texture);
 			shapes.add(new Shape(mesh));
-			
+
 		}
 	}
 

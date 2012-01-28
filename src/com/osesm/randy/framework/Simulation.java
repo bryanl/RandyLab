@@ -3,9 +3,6 @@ package com.osesm.randy.framework;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.osesm.randy.framework.gl.ShaderCompiler;
-import com.osesm.randy.lab.R;
-
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
@@ -13,7 +10,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.TextView;
+
+import com.osesm.randy.framework.gl.ShaderCompiler;
+import com.osesm.randy.lab.FPSView;
+import com.osesm.randy.lab.R;
 
 public abstract class Simulation extends Activity implements Renderer {
 
@@ -32,7 +32,7 @@ public abstract class Simulation extends Activity implements Renderer {
 
 	long startTime = System.nanoTime();
 	private ShaderCompiler shaderCompiler;
-	private TextView statusBar;
+	private FPSView statusBar;
 
 	public void debug(String message) {
 		Log.d(TAG, message);
@@ -44,7 +44,6 @@ public abstract class Simulation extends Activity implements Renderer {
 				statusBar.setText(message);
 			}
 		});
-
 	}
 
 	@Override
@@ -64,9 +63,9 @@ public abstract class Simulation extends Activity implements Renderer {
 	private void addStatusBar(RelativeLayout view) {
 		RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		statusBar = new TextView(this);
-		statusBar.setText("frames per second: 999");
-
+		
+		statusBar = new FPSView(this);
+		
 		relativeParams.addRule(RelativeLayout.ALIGN_BOTTOM, glView.getId());
 		view.addView(statusBar, relativeParams);
 	}

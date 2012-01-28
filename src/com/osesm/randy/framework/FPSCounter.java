@@ -12,7 +12,7 @@ public class FPSCounter {
 	public void logFrame() {
 		frames++;
 		if (System.nanoTime() - startTime >= 1000000000) {
-			simulation.setStatus("fps: " + frames);
+			simulation.setStatus("frames per second: " + frames);
 			frames = 0;
 			startTime = System.nanoTime();
 		}
