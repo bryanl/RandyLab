@@ -21,4 +21,4 @@ We are currently at learn to crawl status.
 
 Portions of the code are based on "Beginning Android Games" and other random websites
 I've seen on the Internet. Soon there will be a license for this mess, but for now I would
-not encourage to run this as it may slap your momma, kick your dog, or start thermonuclear war.
+not encourage anyone to run this as it may slap your momma, kick your dog, or start thermonuclear war.
