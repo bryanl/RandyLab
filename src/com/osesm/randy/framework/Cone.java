@@ -1,9 +1,12 @@
 package com.osesm.randy.framework;
 
+import android.opengl.GLES20;
 import android.util.FloatMath;
 
+import com.osesm.randy.framework.gl.Mesh;
 import com.osesm.randy.framework.math.Vector2;
 import com.osesm.randy.framework.math.Vector3;
+import com.osesm.randy.lab.*;
 
 public class Cone extends ParametricSurface {
 
@@ -11,6 +14,8 @@ public class Cone extends ParametricSurface {
 	private float height;
 
 	public Cone(float height, float radius) {
+		super();
+		
 		this.height = height;
 		this.radius = radius;
 
@@ -34,5 +39,21 @@ public class Cone extends ParametricSurface {
 	@Override
 	public boolean useDomainCoords() {
 		return false;
+	}
+
+	@Override
+	public Shape toShape(Simulation simulation) {
+		float[] coneVertices = generateVertices(0);
+		short[] coneIndices = generateTriangleIndices();
+
+		Mesh mesh = new Mesh(simulation, coneVertices.length, coneIndices.length, true, false,
+				false);
+		mesh.setVertices(coneVertices, 0, coneVertices.length);
+		mesh.setIndices(coneIndices, 0, coneIndices.length);
+		mesh.setDrawStyle(GLES20.GL_TRIANGLES);
+		
+		Shape shape = new Shape(mesh, "simple.vert", "simple.frag");
+		
+		return shape;
 	}
 }

@@ -5,8 +5,15 @@ import com.osesm.randy.framework.math.Matrix4;
 
 public abstract class WorldObject {
 
+	public class MissingShaderException extends RuntimeException {
+		private static final long serialVersionUID = 4063952492692817338L;
+	}
+
 	private Mesh mesh;
 	private Matrix4 projectionMatrix = new Matrix4();
+
+	private String vertexShader;
+	private String fragmentShader;
 
 	public void setMesh(Mesh mesh) {
 		this.mesh = mesh;
@@ -24,8 +31,23 @@ public abstract class WorldObject {
 		return projectionMatrix;
 	}
 
+	public String getVertexShader() {
+		return vertexShader;
+	}
+
+	public void setVertexShader(String vertexShader) {
+		this.vertexShader = vertexShader;
+	}
+
+	public String getFragmentShader() {
+		return fragmentShader;
+	}
+
+	public void setFragmentShader(String fragmentShader) {
+		this.fragmentShader = fragmentShader;
+	}
+
 	public abstract void update();
 
 	public abstract void draw();
-
 }

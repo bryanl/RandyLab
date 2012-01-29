@@ -17,6 +17,7 @@ import com.osesm.randy.framework.FileIO;
 public class ShaderCompiler {
 	private String logTag = "Program";
 	private AssetManager assetManager;
+	private final String shaderBaseDirectory = "shaders";
 
 	public ShaderCompiler(AssetManager assetManager) {
 		this.assetManager = assetManager;
@@ -27,9 +28,9 @@ public class ShaderCompiler {
 
 		try {
 			String vertexShaderSource = convertStreamToString(fileIO
-					.readAsset(vertexShaderFileName));
+					.readAsset(shaderBaseDirectory + "/" + vertexShaderFileName));
 			String fragmentShaderSource = convertStreamToString(fileIO
-					.readAsset(fragmentShaderFileName));
+					.readAsset(shaderBaseDirectory + "/" + fragmentShaderFileName));
 
 			Log.d(logTag, vertexShaderSource);
 			Log.d(logTag, fragmentShaderSource);

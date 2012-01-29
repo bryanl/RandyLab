@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.osesm.randy.framework.math.Vector2;
 import com.osesm.randy.framework.math.Vector3;
+import com.osesm.randy.lab.Shape;
 
 public abstract class ParametricSurface implements Surface {
 
@@ -175,5 +176,7 @@ public abstract class ParametricSurface implements Surface {
 	}
 
 	public abstract Vector3 evaluate(Vector2 computeDomain);
+	
+	public abstract Shape toShape(Simulation simulation);
 
 }

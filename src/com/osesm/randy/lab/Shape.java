@@ -3,7 +3,7 @@ package com.osesm.randy.lab;
 import com.osesm.randy.framework.WorldObject;
 import com.osesm.randy.framework.gl.Mesh;
 
-class Shape extends WorldObject {
+public class Shape extends WorldObject {
 
 	private static long nextId = 0;
 	private float angle;
@@ -12,8 +12,11 @@ class Shape extends WorldObject {
 	public static long nextId() {
 		return nextId++;
 	}
-
-	public Shape(Mesh mesh) {		
+	
+	public Shape(Mesh mesh, String vertexShader, String fragmentShader) {
+		setFragmentShader(fragmentShader);
+		setVertexShader(vertexShader);
+		
 		setMesh(mesh);
 		this.id = nextId();
 	}
@@ -25,18 +28,24 @@ class Shape extends WorldObject {
 	public void setAngle(float angle) {
 		this.angle = angle;
 	}
-	
+
 	@Override
 	public void setMesh(Mesh mesh) {
 		super.setMesh(mesh);
 
-		if (mesh.hasTexture()) {
-			mesh.compile("hellogl_with_mesh_texture_vertex_shader.glsl",
-					"hellogl_with_mesh_texture_fragment_shader.glsl");
-		} else {
-			mesh.compile("hellogl_with_mesh_vertex_shader.glsl",
-					"hellogl_with_mesh_fragment_shader.glsl");
+		if ((getFragmentShader() == null) || (getVertexShader() == null)) {
+			throw new MissingShaderException();
 		}
+
+		mesh.compile(getVertexShader(), getFragmentShader());
+
+		// if (mesh.hasTexture()) {
+		// mesh.compile("hellogl_with_mesh_texture_vertex_shader.glsl",
+		// "hellogl_with_mesh_texture_fragment_shader.glsl");
+		// } else {
+		// mesh.compile("hellogl_with_mesh_vertex_shader.glsl",
+		// "hellogl_with_mesh_fragment_shader.glsl");
+		// }
 	}
 
 	@Override

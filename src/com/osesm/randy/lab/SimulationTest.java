@@ -11,7 +11,6 @@ import com.osesm.randy.framework.FPSCounter;
 import com.osesm.randy.framework.Scene;
 import com.osesm.randy.framework.Simulation;
 import com.osesm.randy.framework.gl.Camera;
-import com.osesm.randy.framework.gl.Mesh;
 
 public class SimulationTest extends Simulation {
 
@@ -91,19 +90,9 @@ public class SimulationTest extends Simulation {
 			// Texture texture = new Texture(simulation, R.raw.basic_texture);
 
 			shapes = new ArrayList<Shape>();
-			Mesh mesh;
 
-			Cone cone = new Cone(3.0f, 1.0f);
-			// Sphere cone = new Sphere(1.4f);
-			float[] coneVertices = cone.generateVertices(0);
-			short[] coneIndices = cone.generateLineIndices();
-
-			mesh = new Mesh(simulation, coneVertices.length, coneIndices.length, true,
-					false, false);
-			mesh.setVertices(coneVertices, 0, coneVertices.length);
-			mesh.setIndices(coneIndices, 0, coneIndices.length);
-			mesh.setDrawStyle(GLES20.GL_LINES);
-			shapes.add(new Shape(mesh));
+			Cone cone = new Cone(3.0f, 1.0f);													
+			shapes.add(cone.toShape(simulation));
 
 			// mesh = ObjLoader.load(simulation, "sphere.obj");
 			// shapes.add(new Shape(mesh));
