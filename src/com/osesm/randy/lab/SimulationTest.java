@@ -6,13 +6,12 @@ import java.util.List;
 import android.opengl.GLES20;
 import android.os.SystemClock;
 
+import com.osesm.randy.framework.Cone;
 import com.osesm.randy.framework.FPSCounter;
 import com.osesm.randy.framework.Scene;
 import com.osesm.randy.framework.Simulation;
 import com.osesm.randy.framework.gl.Camera;
 import com.osesm.randy.framework.gl.Mesh;
-import com.osesm.randy.framework.gl.ObjLoader;
-import com.osesm.randy.framework.gl.Texture;
 
 public class SimulationTest extends Simulation {
 
@@ -44,8 +43,6 @@ public class SimulationTest extends Simulation {
 
 			long time = SystemClock.uptimeMillis() % 4000L;
 			float angle = 0.090f * ((int) time);
-
-			// camera.rotate(angle);
 
 			for (Shape shape : shapes) {
 				shape.setAngle(shape.getId() % 2 == 0 ? angle : -angle);
@@ -82,33 +79,50 @@ public class SimulationTest extends Simulation {
 		}
 
 		private void initShapes() {
-			short triangleIndices[] = { 0, 1, 2 };
-
-			float triangle1Coords[] = { -0.5f, -0.25f, 0.5f, 0f, 0f, 0.5f, -0.25f, 0.5f, 1f, 0f, 0.0f, 0.559016994f, 0.5f, 0.5f, 1f };
-			float triangle2Coords[] = { -0.7f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.3f, -0.25f, 0.25f, 0.0f, 0.0f, 1.0f, 1.0f, -0.2f, 0.559016994f, 0.2f, 1.0f, 0.0f, 0.0f, 1.0f };
-
-			Texture texture = new Texture(simulation, R.raw.basic_texture);
+			// TODO This needs to be moved into its set of classes
+			// short triangleIndices[] = { 0, 1, 2 };
+			//
+			// float triangle1Coords[] = { -0.5f, -0.25f, 0.5f, 0f, 0f, 0.5f,
+			// -0.25f, 0.5f, 1f, 0f, 0.0f, 0.559016994f, 0.5f, 0.5f, 1f };
+			// float triangle2Coords[] = { -0.7f, -0.25f, 0.0f, 0.0f, 1.0f,
+			// 0.0f, 1.0f, 0.3f, -0.25f, 0.25f, 0.0f, 0.0f, 1.0f, 1.0f, -0.2f,
+			// 0.559016994f, 0.2f, 1.0f, 0.0f, 0.0f, 1.0f };
+			//
+			// Texture texture = new Texture(simulation, R.raw.basic_texture);
 
 			shapes = new ArrayList<Shape>();
 			Mesh mesh;
 
+			Cone cone = new Cone(3.0f, 1.0f);
+			// Sphere cone = new Sphere(1.4f);
+			float[] coneVertices = cone.generateVertices(0);
+			short[] coneIndices = cone.generateLineIndices();
+
+			mesh = new Mesh(simulation, coneVertices.length, coneIndices.length, true,
+					false, false);
+			mesh.setVertices(coneVertices, 0, coneVertices.length);
+			mesh.setIndices(coneIndices, 0, coneIndices.length);
+			mesh.setDrawStyle(GLES20.GL_LINES);
+			shapes.add(new Shape(mesh));
+
 			// mesh = ObjLoader.load(simulation, "sphere.obj");
 			// shapes.add(new Shape(mesh));
 			//
-			mesh = new Mesh(simulation, 15, 6, false, true, false);
-			mesh.setVertices(triangle1Coords, 0, triangle1Coords.length);
-			mesh.setIndices(triangleIndices, 0, triangleIndices.length);
-			mesh.setTexture(texture);
-			shapes.add(new Shape(mesh));
 
-			mesh = new Mesh(simulation, 21, 6, true, false, false);
-			mesh.setVertices(triangle2Coords, 0, triangle2Coords.length);
-			mesh.setIndices(triangleIndices, 0, triangleIndices.length);
-			shapes.add(new Shape(mesh));
+			// mesh = new Mesh(simulation, 15, 6, false, true, false);
+			// mesh.setVertices(triangle1Coords, 0, triangle1Coords.length);
+			// mesh.setIndices(triangleIndices, 0, triangleIndices.length);
+			// mesh.setTexture(texture);
+			// shapes.add(new Shape(mesh));
+			//
+			// mesh = new Mesh(simulation, 21, 6, true, false, false);
+			// mesh.setVertices(triangle2Coords, 0, triangle2Coords.length);
+			// mesh.setIndices(triangleIndices, 0, triangleIndices.length);
+			// shapes.add(new Shape(mesh));
 
-			mesh = ObjLoader.load(simulation, "sphere.obj");
-			mesh.setTexture(texture);
-			shapes.add(new Shape(mesh));
+			// mesh = ObjLoader.load(simulation, "sphere.obj");
+			// mesh.setTexture(texture);
+			// shapes.add(new Shape(mesh));
 
 		}
 	}

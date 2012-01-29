@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +33,10 @@ public class Mesh {
 	
 	private Matrix4 modelMatrix = new Matrix4();
 	private Matrix4 mMVPMatrix = new Matrix4();
+
+	private Simulation simulation;
+
+	private int drawStyle;
 	
 	
 	private static final int VERTICES_OFFSET = 0;
@@ -41,9 +46,9 @@ public class Mesh {
 
 	public Mesh(Simulation simulation, int maxVertices, int maxIndices, boolean hasColor,
 			boolean hasTexCoords, boolean hasNormals) {
-
+		this.simulation = simulation;
 		shaderCompiler = simulation.getShaderCompiler();
-		
+			
 		handles = new HashMap<String, Integer>();
 
 		this.hasColor = hasColor;
@@ -55,10 +60,14 @@ public class Mesh {
 
 		simulation.debug("vertex size = " + vertexSize);
 
-		ByteBuffer buffer = ByteBuffer.allocateDirect(maxVertices * vertexSize);
-		buffer.order(ByteOrder.nativeOrder());
-		vertices = buffer.asIntBuffer();
+		initializeVertices(maxVertices);
+		initializeIndices(maxIndices);
+		
+		drawStyle = GLES20.GL_TRIANGLES;
+	}
 
+	private void initializeIndices(int maxIndices) {
+		ByteBuffer buffer;
 		if (maxIndices > 0) {
 			buffer = ByteBuffer.allocateDirect(maxIndices * Short.SIZE / 8);
 			buffer.order(ByteOrder.nativeOrder());
@@ -68,7 +77,16 @@ public class Mesh {
 		}
 	}
 
+	private void initializeVertices(int maxVertices) {
+		ByteBuffer buffer;
+		buffer = ByteBuffer.allocateDirect(maxVertices * vertexSize);
+		buffer.order(ByteOrder.nativeOrder());
+		vertices = buffer.asIntBuffer();
+	}
+
 	public void setVertices(float[] vertices, int offset, int length) {
+		simulation.debug("set vertices to: " + Arrays.toString(vertices));
+		
 		this.vertices.clear();
 		int len = offset + length;
 		for (int i = offset, j = 0; i < len; i++, j++)
@@ -78,6 +96,8 @@ public class Mesh {
 	}
 
 	public void setIndices(short[] indices, int offset, int length) {
+		simulation.debug("set indices to: " + Arrays.toString(indices));
+		
 		this.indices.clear();
 		this.indices.put(indices, offset, length);
 		this.indices.flip();
@@ -128,6 +148,14 @@ public class Mesh {
 	public Matrix4 getModelMatrix() {
 		return modelMatrix;
 	}
+	
+	public void setDrawStyle(int drawStyle) {
+		this.drawStyle = drawStyle;
+	}
+	
+	public int getDrawStyle() {
+		return drawStyle;
+	}
 
 	public void draw() {
 		GLES20.glUseProgram(program);
@@ -162,10 +190,10 @@ public class Mesh {
 		GLES20.glUniformMatrix4fv(handles.get("uMVPMatrix"), 1, false, mMVPMatrix.getValues(), 0);
 
 		if (indices == null) {
-			GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertices.limit());
+			GLES20.glDrawArrays(drawStyle, 0, vertices.limit());
 			checkGlError("drawArrays");
 		} else {
-			GLES20.glDrawElements(GLES20.GL_TRIANGLES, 6, GLES20.GL_UNSIGNED_SHORT,
+			GLES20.glDrawElements(drawStyle, indices.limit(), GLES20.GL_UNSIGNED_SHORT,
 					indices);
 			checkGlError("drawElements");
 		}

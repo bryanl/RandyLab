@@ -1,7 +1,5 @@
 package com.osesm.randy.lab;
 
-import android.util.Log;
-
 import com.osesm.randy.framework.WorldObject;
 import com.osesm.randy.framework.gl.Mesh;
 
@@ -43,7 +41,6 @@ class Shape extends WorldObject {
 
 	@Override
 	public void update() {
-		Log.d("RandyLab", "model matrix = " + getMesh().getModelMatrix());
 		getMesh().getModelMatrix().rotate(angle, 0, 0, 1.0f);
 		getMesh().prepare(getProjectionMatrix());
 	}

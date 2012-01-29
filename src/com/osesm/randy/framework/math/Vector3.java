@@ -68,6 +68,16 @@ public class Vector3 {
 
 		return this;
 	}
+	
+	public float[] toFloat() {
+		float tmp[] = {x, y, z};
+		return tmp;
+	}
+
+	public Vector3 cross(Vector3 other) {
+		return new Vector3(y * other.z - z * other.y, z * other.x - x * other.z, x
+				* other.y - y * other.x);
+	}
 
 	public float distance(Vector3 other) {
 		return FloatMath.sqrt(distanceSquared(other));

@@ -15,7 +15,8 @@ public class Camera {
 		this.width = width;
 		this.height = height;
 
-		Matrix.setLookAtM(viewMatrix.getValues(), 0, 0, 0, -3, 0f, 0f, 0f, 0f, 2.0f, 0.0f);
+		Matrix.setLookAtM(viewMatrix.getValues(), 0, 2f, -2f, -3, 0f, 0f, 0f, 0f, 2.0f,
+				0.0f);
 
 	}
 
@@ -30,6 +31,13 @@ public class Camera {
 
 	private Matrix4 getProjection() {
 		float ratio = (float) width / height;
+
+		// TODO This is where we want to be
+		// float h = 4.0f * height / width;
+		// Matrix.frustumM(projectionMatrix.getValues(), 0, -2.0f, 2.0f,
+		// -h/2.0f, h/2.0f, 5.0f, 10.0f);
+		
+		
 		Matrix.frustumM(projectionMatrix.getValues(), 0, -ratio, ratio, -1, 1, 1, 7);
 		// Matrix.orthoM(projectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
 
