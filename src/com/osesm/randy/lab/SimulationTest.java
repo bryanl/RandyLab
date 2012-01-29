@@ -24,6 +24,8 @@ public class SimulationTest extends Simulation {
 		List<Shape> shapes;
 		private Camera camera;
 		private FPSCounter fpscounter;
+		
+		private boolean shouldRotate = false;
 
 		public SimulationScene(Simulation simulation) {
 			super(simulation);
@@ -41,10 +43,16 @@ public class SimulationTest extends Simulation {
 			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
 			long time = SystemClock.uptimeMillis() % 4000L;
-			float angle = 0.090f * ((int) time);
+			
+			float angle;
+			if (shouldRotate)
+				angle = 0.090f * ((int) time);
+			else
+				angle = 0;
 
 			for (Shape shape : shapes) {
-				shape.setAngle(shape.getId() % 2 == 0 ? angle : -angle);
+				if (shouldRotate) 
+					shape.setAngle(shape.getId() % 2 == 0 ? angle : -angle);
 				shape.setProjectionMatrix(camera.getViewProjectionMatrix());
 				shape.update();
 				shape.draw();
