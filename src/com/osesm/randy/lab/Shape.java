@@ -38,14 +38,6 @@ public class Shape extends WorldObject {
 		}
 
 		mesh.compile(getVertexShader(), getFragmentShader());
-
-		// if (mesh.hasTexture()) {
-		// mesh.compile("hellogl_with_mesh_texture_vertex_shader.glsl",
-		// "hellogl_with_mesh_texture_fragment_shader.glsl");
-		// } else {
-		// mesh.compile("hellogl_with_mesh_vertex_shader.glsl",
-		// "hellogl_with_mesh_fragment_shader.glsl");
-		// }
 	}
 
 	@Override
