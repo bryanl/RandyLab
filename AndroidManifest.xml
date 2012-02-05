@@ -28,13 +28,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".HelloGLTest"
+            android:name=".HelloGLDemo"
             android:label="Hello GL" >
         </activity>
         <activity
-            android:name=".SimulationTest"
-            android:label="Simulation Object Graph Test" >
+            android:name=".VBODemo"
+            android:label="VBO Demo" >
         </activity>
     </application>
-
 </manifest>

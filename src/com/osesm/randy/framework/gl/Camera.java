@@ -15,7 +15,7 @@ public class Camera {
 		this.width = width;
 		this.height = height;
 
-		Matrix.setLookAtM(viewMatrix.getValues(), 0, 0f, -2.5f, -4f, 0f, 0f, 0f, 0f, 1.0f,
+		Matrix.setLookAtM(viewMatrix.values(), 0, 0f, -2.5f, -4f, 0f, 0f, 0f, 0f, 1.0f,
 				0.0f);
 
 	}
@@ -37,7 +37,7 @@ public class Camera {
 		// Matrix.frustumM(projectionMatrix.getValues(), 0, -2.0f, 2.0f,
 		// -h/2.0f, h/2.0f, 5.0f, 10.0f);
 
-		Matrix.frustumM(projectionMatrix.getValues(), 0, -h, h, -1, 1, 1, 10);
+		Matrix.frustumM(projectionMatrix.values(), 0, -h, h, -1, 1, 1, 10);
 		// Matrix.orthoM(projectionMatrix, 0, -ratio, ratio, -2, 2, 3, 7);
 
 		return projectionMatrix;

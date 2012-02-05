@@ -16,7 +16,7 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
-public class HelloGLTest extends Activity {
+public class HelloGLDemo extends Activity {
 
 	private GLSurfaceView mGLView;
 

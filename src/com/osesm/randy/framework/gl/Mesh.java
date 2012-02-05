@@ -187,7 +187,7 @@ public class Mesh {
 			checkGlError("enable texture vertex array");
 		}
 
-		GLES20.glUniformMatrix4fv(handles.get("uMVPMatrix"), 1, false, mMVPMatrix.getValues(), 0);
+		GLES20.glUniformMatrix4fv(handles.get("uMVPMatrix"), 1, false, mMVPMatrix.values(), 0);
 
 		if (indices == null) {
 			GLES20.glDrawArrays(drawStyle, 0, vertices.limit());
