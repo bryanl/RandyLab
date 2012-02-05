@@ -1,5 +1,8 @@
 package com.osesm.randy.framework;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -12,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
 import com.osesm.randy.framework.gl.ShaderCompiler;
+import com.osesm.randy.framework.gl.Visual;
 import com.osesm.randy.lab.FPSView;
 import com.osesm.randy.lab.R;
 
@@ -34,6 +38,8 @@ public abstract class Simulation extends Activity implements Renderer {
 	private ShaderCompiler shaderCompiler;
 	private FPSView statusBar;
 
+	private List<Visual> visuals;
+
 	public void debug(String message) {
 		Log.d(TAG, message);
 	}
@@ -52,7 +58,9 @@ public abstract class Simulation extends Activity implements Renderer {
 		setContentView(R.layout.main);
 
 		RelativeLayout view = (RelativeLayout) findViewById(R.id.container);
-		
+
+		visuals = new ArrayList<Visual>();
+
 		addGLSurface(view);
 		addStatusBar(view);
 
@@ -63,9 +71,9 @@ public abstract class Simulation extends Activity implements Renderer {
 	private void addStatusBar(RelativeLayout view) {
 		RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		
+
 		statusBar = new FPSView(this);
-		
+
 		relativeParams.addRule(RelativeLayout.ALIGN_BOTTOM, glView.getId());
 		view.addView(statusBar, relativeParams);
 	}
@@ -171,6 +179,10 @@ public abstract class Simulation extends Activity implements Renderer {
 
 	public Scene getCurrentScene() {
 		return scene;
+	}
+
+	public List<Visual> getVisuals() {
+		return visuals;
 	}
 
 	public abstract Scene getStartScene();
