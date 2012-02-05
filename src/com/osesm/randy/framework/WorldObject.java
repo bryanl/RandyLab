@@ -9,6 +9,12 @@ public abstract class WorldObject {
 		private static final long serialVersionUID = 4063952492692817338L;
 	}
 
+	private static long nextId = 0;
+
+	public static long getNextObjectId() {
+		return nextId++;
+	}
+
 	private Mesh mesh;
 	private Matrix4 projectionMatrix = new Matrix4();
 

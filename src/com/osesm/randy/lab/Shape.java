@@ -5,20 +5,15 @@ import com.osesm.randy.framework.gl.Mesh;
 
 public class Shape extends WorldObject {
 
-	private static long nextId = 0;
 	private float angle;
 	private long id;
 
-	public static long nextId() {
-		return nextId++;
-	}
-	
 	public Shape(Mesh mesh, String vertexShader, String fragmentShader) {
 		setFragmentShader(fragmentShader);
 		setVertexShader(vertexShader);
 		
 		setMesh(mesh);
-		this.id = nextId();
+		this.id = getNextObjectId();
 	}
 
 	public long getId() {

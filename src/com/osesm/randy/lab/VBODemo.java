@@ -5,6 +5,7 @@ import android.opengl.GLES20;
 import com.osesm.randy.framework.FPSCounter;
 import com.osesm.randy.framework.Scene;
 import com.osesm.randy.framework.Simulation;
+import com.osesm.randy.framework.WorldObject;
 import com.osesm.randy.framework.gl.Camera;
 import com.osesm.randy.framework.gl.Mesh;
 
@@ -18,7 +19,7 @@ public class VBODemo extends Simulation {
 	class VBOScene extends Scene {
 
 		private FPSCounter fpscounter;
-		private Shape shape;
+		private WorldObject shape;
 		private Camera camera;
 
 		public VBOScene(Simulation simulation) {
