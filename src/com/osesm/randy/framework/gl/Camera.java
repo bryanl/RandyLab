@@ -1,8 +1,8 @@
 package com.osesm.randy.framework.gl;
 
-import com.osesm.randy.framework.math.Matrix4;
-
 import android.opengl.Matrix;
+
+import com.osesm.randy.framework.math.Matrix4;
 
 public class Camera {
 

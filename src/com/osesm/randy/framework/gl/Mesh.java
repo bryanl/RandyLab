@@ -37,8 +37,7 @@ public class Mesh {
 	private Simulation simulation;
 
 	private int drawStyle;
-	
-	
+		
 	private static final int VERTICES_OFFSET = 0;
 	private static final int UV_OFFSET = 3;
 	private static final int COLOR_OFFSET = 3;
