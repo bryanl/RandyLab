@@ -36,7 +36,6 @@ public abstract class Simulation extends Activity implements Renderer {
 
 	long startTime = System.nanoTime();
 	private ShaderCompiler shaderCompiler;
-	private FPSView statusBar;
 
 	private List<Visual> visuals;
 
@@ -47,7 +46,7 @@ public abstract class Simulation extends Activity implements Renderer {
 	public void setStatus(final String message) {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				statusBar.setText(message);
+				setTitle("VBO Demo | " + message);
 			}
 		});
 	}
@@ -55,34 +54,17 @@ public abstract class Simulation extends Activity implements Renderer {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-
-		RelativeLayout view = (RelativeLayout) findViewById(R.id.container);
-
-		visuals = new ArrayList<Visual>();
-
-		addGLSurface(view);
-		addStatusBar(view);
-
-		fileIO = new FileIO(getAssets());
-		shaderCompiler = new ShaderCompiler(getAssets());
-	}
-
-	private void addStatusBar(RelativeLayout view) {
-		RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
-				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-
-		statusBar = new FPSView(this);
-
-		relativeParams.addRule(RelativeLayout.ALIGN_BOTTOM, glView.getId());
-		view.addView(statusBar, relativeParams);
-	}
-
-	private void addGLSurface(RelativeLayout view) {
+		
 		glView = new GLSurfaceView(this);
 		glView.setEGLContextClientVersion(2);
 		glView.setRenderer(this);
-		view.addView(glView);
+	
+		setContentView(glView);
+
+		visuals = new ArrayList<Visual>();
+
+		fileIO = new FileIO(getAssets());
+		shaderCompiler = new ShaderCompiler(getAssets());
 	}
 
 	@Override
