@@ -11,13 +11,9 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 
 import com.osesm.randy.framework.gl.ShaderCompiler;
 import com.osesm.randy.framework.gl.Visual;
-import com.osesm.randy.lab.FPSView;
-import com.osesm.randy.lab.R;
 
 public abstract class Simulation extends Activity implements Renderer {
 
