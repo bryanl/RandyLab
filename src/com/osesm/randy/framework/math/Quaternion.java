@@ -119,4 +119,9 @@ public class Quaternion {
 	public Quaternion normalize() {
 		return scaled(1 / FloatMath.sqrt(dot(this)));
 	}
+
+	public Matrix4 toMatrix4() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

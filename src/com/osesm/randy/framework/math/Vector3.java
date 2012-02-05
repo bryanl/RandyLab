@@ -4,9 +4,13 @@ import android.util.FloatMath;
 
 public class Vector3 {
 
-	private float z;
-	private float y;
-	private float x;
+	public float z;
+	public float y;
+	public float x;
+	
+	public static int size() {
+		return 3 * 4;
+	}
 
 	public Vector3() {
 	}
@@ -21,7 +25,7 @@ public class Vector3 {
 		this(other.x, other.y, other.z);
 	}
 
-	public Vector3 cpy() {
+	public Vector3 copy() {
 		return new Vector3(x, y, z);
 	}
 
@@ -93,5 +97,4 @@ public class Vector3 {
 		float distanceZ = this.z - z;
 		return distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ;
 	}
-
 }

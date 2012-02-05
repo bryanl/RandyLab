@@ -1,5 +1,7 @@
 package com.osesm.randy.framework.math;
 
+import java.nio.FloatBuffer;
+
 import android.opengl.Matrix;
 
 public class Matrix4 {
@@ -57,12 +59,17 @@ public class Matrix4 {
 	}
 
 	public Matrix4 multiplyByMatrix(Matrix4 otherMatrix) {
-		Matrix.multiplyMM(tmp, 0, values, 0, otherMatrix.getValues(), 0);
+		Matrix.multiplyMM(tmp, 0, values, 0, otherMatrix.values(), 0);
 		return new Matrix4(tmp);
 	}
 
-	public float[] getValues() {
+	public float[] values() {
 		return values;
+	}
+
+	public FloatBuffer toFloatBuffer() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
