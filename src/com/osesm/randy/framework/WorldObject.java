@@ -20,6 +20,11 @@ public abstract class WorldObject {
 
 	private String vertexShader;
 	private String fragmentShader;
+	private long id;
+	
+	public WorldObject() {
+		this.id = getNextObjectId();
+	}
 
 	public void setMesh(Mesh mesh) {
 		this.mesh = mesh;
@@ -45,6 +50,10 @@ public abstract class WorldObject {
 		this.vertexShader = vertexShader;
 	}
 
+	/**
+	 * 
+	 * @return file name of
+	 */
 	public String getFragmentShader() {
 		return fragmentShader;
 	}
@@ -53,7 +62,13 @@ public abstract class WorldObject {
 		this.fragmentShader = fragmentShader;
 	}
 
+	public long getId() {
+		return id;
+	}
+	
 	public abstract void update();
 
 	public abstract void draw();
+
+
 }

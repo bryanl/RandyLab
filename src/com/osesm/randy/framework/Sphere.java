@@ -4,7 +4,6 @@ import android.util.FloatMath;
 
 import com.osesm.randy.framework.math.Vector2;
 import com.osesm.randy.framework.math.Vector3;
-import com.osesm.randy.lab.Shape;
 
 public class Sphere extends ParametricSurface {
 
@@ -33,7 +32,7 @@ public class Sphere extends ParametricSurface {
 	}
 
 	@Override
-	public Shape toShape(Simulation simulation) {
+	public WorldObject toShape(Simulation simulation) {
 		// TODO Auto-generated method stub
 		return null;
 	}

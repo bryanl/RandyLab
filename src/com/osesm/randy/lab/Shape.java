@@ -6,18 +6,14 @@ import com.osesm.randy.framework.gl.Mesh;
 public class Shape extends WorldObject {
 
 	private float angle;
-	private long id;
 
 	public Shape(Mesh mesh, String vertexShader, String fragmentShader) {
+		super();
+		
 		setFragmentShader(fragmentShader);
 		setVertexShader(vertexShader);
 		
 		setMesh(mesh);
-		this.id = getNextObjectId();
-	}
-
-	public long getId() {
-		return id;
 	}
 
 	public void setAngle(float angle) {
@@ -37,7 +33,7 @@ public class Shape extends WorldObject {
 
 	@Override
 	public void update() {
-		getMesh().getModelMatrix().rotate(angle, 0, 0, 1.0f);
+		getMesh().modelMatrix().rotate(angle, 0, 0, 1.0f);
 		getMesh().prepare(getProjectionMatrix());
 	}
 

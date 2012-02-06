@@ -140,11 +140,7 @@ public class Mesh {
 		mMVPMatrix = viewProjectionMatrix.multiplyByMatrix(modelMatrix);
 	}
 
-	public void setModelMatrix(Matrix4 matrix) {
-		modelMatrix = matrix;
-	}
-
-	public Matrix4 getModelMatrix() {
+	public Matrix4 modelMatrix() {
 		return modelMatrix;
 	}
 	
