@@ -22,3 +22,6 @@ We are currently at learn to crawl status.
 Portions of the code are based on "Beginning Android Games" and other random websites
 I've seen on the Internet. Soon there will be a license for this mess, but for now I would
 not encourage anyone to run this as it may slap your momma, kick your dog, or start thermonuclear war.
+
+According to the Scotts, randy could mean, "having a coarse manner." This project is rough around the
+edges. I wouldn't advise taking it too seriously.
