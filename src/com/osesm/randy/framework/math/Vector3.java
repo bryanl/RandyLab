@@ -1,5 +1,7 @@
 package com.osesm.randy.framework.math;
 
+import java.util.Arrays;
+
 import android.util.FloatMath;
 
 public class Vector3 {
@@ -7,7 +9,7 @@ public class Vector3 {
 	public float z;
 	public float y;
 	public float x;
-	
+
 	public static int size() {
 		return 3 * 4;
 	}
@@ -72,9 +74,9 @@ public class Vector3 {
 
 		return this;
 	}
-	
+
 	public float[] toFloat() {
-		float tmp[] = {x, y, z};
+		float tmp[] = { x, y, z };
 		return tmp;
 	}
 
@@ -85,6 +87,20 @@ public class Vector3 {
 
 	public float distance(Vector3 other) {
 		return FloatMath.sqrt(distanceSquared(other));
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		Vector3 tmp = (Vector3) o;
+		if (tmp.x == x && tmp.y == y && tmp.z == z)
+			return true;
+		else
+			return false;
+	}
+
+	@Override
+	public String toString() {
+		return Arrays.toString(toFloat());
 	}
 
 	private float distanceSquared(Vector3 other) {

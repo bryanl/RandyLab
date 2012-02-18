@@ -11,11 +11,15 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 
 import com.osesm.randy.framework.gl.ShaderCompiler;
+import com.osesm.randy.framework.gl.SimulationView;
 import com.osesm.randy.framework.gl.Visual;
 
-public abstract class Simulation extends Activity implements Renderer {
+public abstract class Simulation extends Activity implements Renderer, OnTouchListener {
 
 	private static final String TAG = "RandyLab";
 
@@ -34,6 +38,9 @@ public abstract class Simulation extends Activity implements Renderer {
 	private ShaderCompiler shaderCompiler;
 
 	private List<Visual> visuals;
+	
+ 	float touchX = 0, touchY = 0;
+ 	float touchDeltaX = 0, touchDeltaY = 0;  	
 
 	public void debug(String message) {
 		Log.d(TAG, message);
@@ -51,7 +58,7 @@ public abstract class Simulation extends Activity implements Renderer {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		glView = new GLSurfaceView(this);
+		glView = new SimulationView(this);
 		glView.setEGLContextClientVersion(2);
 		glView.setRenderer(this);
 	
@@ -162,6 +169,39 @@ public abstract class Simulation extends Activity implements Renderer {
 	public List<Visual> getVisuals() {
 		return visuals;
 	}
+	
+	public boolean onTouch(View view, MotionEvent event) {
+		if(event.getAction() == MotionEvent.ACTION_DOWN) {
+			touchX = event.getX();
+			touchY = event.getY(); 
+		} else if(event.getAction() == MotionEvent.ACTION_MOVE) {
+			float newX = event.getX();
+			float newY = event.getY();
+			touchDeltaX += newX - touchX;
+			touchDeltaY += newY - touchY;
+			touchX = newX;
+			touchY = newY; 
+		} else if(event.getAction() == MotionEvent.ACTION_UP) {
+			touchX = event.getX();
+			touchY = event.getY();
+		}
+		return true;
+	}
+	
+	public float getChangeX()
+	{
+		float deltaX = touchDeltaX;
+		touchDeltaX = 0;
+		return deltaX;
+	}
+	
+	public float getChangeY()
+	{
+		float deltaY = touchDeltaY;
+		touchDeltaY = 0;
+		return deltaY;
+	}
+	
 
 	public abstract Scene getStartScene();
 }

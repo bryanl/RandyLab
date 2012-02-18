@@ -12,7 +12,6 @@ import com.osesm.randy.framework.WorldObject;
 import com.osesm.randy.framework.gl.Camera;
 import com.osesm.randy.framework.gl.Mesh;
 import com.osesm.randy.framework.gl.Texture;
-import com.osesm.randy.framework.math.Matrix4;
 
 public class VBODemo extends Simulation {
 
@@ -28,6 +27,8 @@ public class VBODemo extends Simulation {
 		private Camera camera;
 		private Texture texture;
 		private WorldObject shape2;
+		
+		float eyeAngle = 0;
 
 		public VBOScene(Simulation simulation) {
 			super(simulation);
@@ -42,19 +43,25 @@ public class VBODemo extends Simulation {
 
 		@Override
 		public void update(float deltaTime) {
-			// TODO Auto-generated method stub
-
+//			eyeAngle += 0.01f;
+//			if (eyeAngle >= 360) 
+//				eyeAngle = 0;
+//			camera.rotate(eyeAngle);
 		}
 
 		@Override
 		public void present(float deltaTime) {
-			shape.setProjectionMatrix(camera.getViewProjectionMatrix());
-			shape.update();
-			shape.draw();
+
+			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+			
+			//			shape.setProjectionMatrix(camera.getViewProjectionMatrix());
+//			shape.update();
+//			shape.draw();
 
 			// draw a billboard
 			{
 
+				
 				shape2.setProjectionMatrix(camera.getViewProjectionMatrix());
 				shape2.update();
 				shape2.draw();
@@ -117,6 +124,61 @@ public class VBODemo extends Simulation {
 			float triangleCoords[] = { -0.7f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.3f, -0.25f, 0.25f, 0.0f, 0.0f, 1.0f, 1.0f, -0.2f, 0.559016994f, 0.2f, 1.0f, 0.0f, 0.0f, 1.0f };
 
 			float triangle1Coords[] = { -0.5f, -0.25f, 0.5f, 0f, 0f, 0.5f, -0.25f, 0.5f, 1f, 0f, 0.0f, 0.559016994f, 0.5f, 0.5f, 1f };
+			
+			
+			short lCoordIndices[] = { 0, 1, 2,
+					                  3, 4, 5,
+					                  6, 7, 8,
+					                  9, 10, 11,
+					                  12, 13, 14,
+					                  15, 16, 17,
+					                  18, 19, 20,
+					                  21, 22, 23,
+					                  24, 25, 26,
+					                  27, 28, 29,
+					                  };
+			float lCoords[] = {-0.8f, -0.6f, 0, 1f, 0, 0, 1f,  // 0
+					           1.0f, -0.6f, 0, 0, 1f, 0, 1f,   // 1
+					           -0.8f, 0, 0, 0, 0, 1f, 1f,      // 2
+					           
+					           1.0f, -0.6f, 0, 1f, 0, 0, 1f,   // 3
+					           1.0f, 0, 0, 0, 1.0f, 0, 1f,     // 4
+					           -0.8f, 0, 0, 0, 0, 1f, 1f,      // 5
+					           
+					           0.4f, 0.6f, 0, 1f, 0, 0, 1f,    // 6
+					           0.4f, 0, 0, 0, 1f, 0, 1f,       // 7
+					           1.0f, 0, 0, 0, 0, 1f, 1f,       // 8
+					           
+					           0.4f, 0.6f, 0, 1, 0, 0, 1,      // 9
+					           1.0f, 0.6f, 0, 0, 1, 0, 1,      // 10
+					           1.0f, 0, 0, 0, 0, 1, 1,         // 11
+					           
+					           -1, 0.2f, -0.3f, 1, 0, 0, 1,    // 12
+					           0.4f, 0, 0, 0, 1, 0, 1,         // 13
+					           -0.8f, 0, 0, 0 , 0, 1, 1,       // 14
+					           
+					           -1, 0.2f, -0.3f, 1, 0, 0, 1,    // 15
+					           0.2f, 0.2f, -0.3f, 0, 1, 0, 1,  // 16
+					           0.4f, 0, 0, 0, 0, 1, 1,         // 17
+					           
+					           0.2f, 0.2f, -0.3f, 1, 0, 0, 1,  // 18
+					           0.2f, 0.8f, -0.3f, 0, 1, 0, 1,  // 19
+					           0.4f, 0, 0, 0, 0, 1, 1,         // 20
+					           
+					           0.2f, 0.8f, -0.3f, 1, 0, 0, 1,  // 21
+					           0.4f, 0.6f, 0, 0, 1, 0, 1,      // 22
+					           0.4f, 0, 0, 0, 0, 0, 1, 1,      // 23
+					           
+					           0.2f, 0.8f, -0.3f, 1, 0, 0, 1,  // 24
+					           0.4f, 0.6f, 0, 0, 1, 0, 1,      // 25
+					           1.0f, 0.6f, 0, 0, 0, 1, 1,      // 26
+					           
+					           1.0f, 0.6f, 0, 1, 0, 0, 1,
+					           0.8f, 0.8f, -0, 0, 1, 0, 1,
+					           0.2f, 0.8f, -0.3f, 0, 0, 1, 1,
+					           };   
+			
+			
 
 			Mesh mesh = new Mesh(simulation, 21, 6, true, false, false);
 			mesh.setVertices(triangleCoords, 0, triangleCoords.length);
@@ -135,7 +197,13 @@ public class VBODemo extends Simulation {
 			simulation.debug("translate: " + Arrays.toString(values));
 			
 			// shape2 = new Shape(mesh, "billboard.vert", "billboard.frag");
-			shape2 = new Shape(mesh, "texture.vert", "texture.frag");
+//			shape2 = new Shape(mesh, "texture.vert", "texture.frag");
+			
+			mesh = new Mesh(simulation, lCoords.length, lCoordIndices.length, true, false, false);
+			mesh.setVertices(lCoords, 0, lCoords.length);
+			mesh.setIndices(lCoordIndices, 0, lCoordIndices.length);
+			shape2 = new Shape(mesh, "simple.vert", "simple.frag");
+			
 
 		}
 

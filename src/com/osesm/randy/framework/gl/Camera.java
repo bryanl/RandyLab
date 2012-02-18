@@ -15,6 +15,8 @@ public class Camera {
 	private Vector3 eye;
 	private Vector3 up;
 	private Vector3 center;
+	
+	private float angle = 0;
 
 	public Camera(int width, int height) {
 		this.width = width;
@@ -58,12 +60,13 @@ public class Camera {
 	}
 
 	public void rotate(float angle) {
-		viewMatrix.rotate(angle, 0.2f, 0, 0);
+		viewMatrix.rotate(angle, 0.1f, 0, 0);
 	}
 
 	private Matrix4 getProjection() {
 //		float ratio = (float) width / height;
 
+		
 		// TODO This is where we want to be
 		float h = 4.0f * height / width;
 		// Matrix.frustumM(projectionMatrix.getValues(), 0, -2.0f, 2.0f,
@@ -77,6 +80,11 @@ public class Camera {
 
 	private Matrix4 getView() {
 
+		angle = 0.5f;
+
+		Matrix.rotateM(viewMatrix.values(), 0, angle, 0f, 1f, 0f);
+
+		
 		return viewMatrix;
 
 	}
