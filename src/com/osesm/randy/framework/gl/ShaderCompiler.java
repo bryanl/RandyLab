@@ -15,7 +15,7 @@ import android.util.Log;
 import com.osesm.randy.framework.FileIO;
 
 public class ShaderCompiler {
-	private String logTag = "Program";
+	private String logTag = "RandyLab";
 	private AssetManager assetManager;
 	private final String shaderBaseDirectory = "shaders";
 
