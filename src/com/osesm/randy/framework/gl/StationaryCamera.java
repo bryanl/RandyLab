@@ -26,7 +26,7 @@ public class StationaryCamera {
 		center = new Vector3(0, 0, 0);
 		up = new Vector3(0, 1f, 0);
 
-		Matrix.setLookAtM(viewMatrix.getFloatArray(), 0, eye.x, eye.y, eye.z, center.x,
+		Matrix.setLookAtM(viewMatrix.asFloatArray(), 0, eye.x, eye.y, eye.z, center.x,
 				center.y, center.z, up.x, up.y, up.z);
 	}
 
@@ -72,7 +72,7 @@ public class StationaryCamera {
 		// Matrix.frustumM(projectionMatrix.getValues(), 0, -2.0f, 2.0f,
 		// -h/2.0f, h/2.0f, 5.0f, 10.0f);
 
-		Matrix.frustumM(projectionMatrix.getFloatArray(), 0, -h, h, -1, 1, 1, 10);
+		Matrix.frustumM(projectionMatrix.asFloatArray(), 0, -h, h, -1, 1, 1, 10);
 		// Matrix.orthoM(projectionMatrix, 0, -ratio, ratio, -2, 2, 3, 7);
 
 		return projectionMatrix;

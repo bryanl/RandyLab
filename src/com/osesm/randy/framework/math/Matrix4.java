@@ -65,11 +65,11 @@ public class Matrix4 {
 	}
 
 	public Matrix4 multiplyByMatrix(Matrix4 otherMatrix) {
-		Matrix.multiplyMM(tmp, 0, _floatArray, 0, otherMatrix.getFloatArray(), 0);
+		Matrix.multiplyMM(tmp, 0, _floatArray, 0, otherMatrix.asFloatArray(), 0);
 		return new Matrix4(tmp);
 	}
 
-	public float[] getFloatArray() {
+	public float[] asFloatArray() {
 		return _floatArray;
 	}
 
@@ -80,7 +80,7 @@ public class Matrix4 {
 
 	@Override
 	public String toString() {
-		return Arrays.toString(getFloatArray());
+		return Arrays.toString(asFloatArray());
 	}
 	
 }

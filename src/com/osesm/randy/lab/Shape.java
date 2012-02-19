@@ -47,6 +47,6 @@ public class Shape extends WorldObject {
 	
 	public void setScale(float scale) {
 		Matrix4 modelMatrix = getMesh().getModelMatrix();
-		Matrix.scaleM(modelMatrix.getFloatArray(), 0, scale, 0, 0);
+		Matrix.scaleM(modelMatrix.asFloatArray(), 0, scale, 0, 0);
 	}
 }

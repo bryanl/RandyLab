@@ -199,7 +199,7 @@ public class Mesh {
 			enableNormals();
 
 		GLES20.glUniformMatrix4fv(handles.get("uMVPMatrix"), 1, false,
-				mvpMatrix.getFloatArray(), 0);
+				mvpMatrix.asFloatArray(), 0);
 
 		if (indices == null) {
 			GLES20.glDrawArrays(drawStyle, 0, vertices.limit());
@@ -219,27 +219,27 @@ public class Mesh {
 		GLES20.glEnableVertexAttribArray(handles.get("aNormal"));
 		checkGlError("enable normal vertex array");
 
-		GLES20.glVertexAttrib4f(handles.get("aDiffuseMaterial"), 0.75f, 0.75f, 0.75f, 1);
+		GLES20.glVertexAttrib4f(handles.get("aDiffuseMaterial"), 1f, 0.75f, 0.75f, 1);
 		checkGlError("set diffuse material");
 
-		float normalMatrix[] = { 0, -5, -10 };
+		float normalMatrix[] = { 1, 1, 2 };
 		GLES20.glUniformMatrix3fv(handles.get("uNormalMatrix"), 1, false, normalMatrix, 0);
 		checkGlError("set diffuse material");
 
-		float lightPosition[] = { 2f, 0.25f, 1 };
+		float lightPosition[] = { 2f, 0.25f, 10 };
 		GLES20.glUniform3f(handles.get("uLightPosition"), lightPosition[0],
 				lightPosition[1], lightPosition[2]);
 		checkGlError("set diffuse material");
 
-		float ambientMaterial[] = { 0.1f, 0.1f, 0.1f };
+		float ambientMaterial[] = { 0.5f, 0.1f, 0.1f };
 		GLES20.glUniform3f(handles.get("uAmbientMaterial"), ambientMaterial[0],
 				ambientMaterial[1], ambientMaterial[2]);
 		checkGlError("set diffuse material");
 		
-		GLES20.glUniform1f(handles.get("uShininess"), 19);
+		GLES20.glUniform1f(handles.get("uShininess"), 50);
 		checkGlError("set diffuse material");
 
-		float specularMaterial[] = { 0, 0.2f, 0 };
+		float specularMaterial[] = { 0.2f, 0.2f, 0 };
 		GLES20.glUniform3fv(handles.get("uSpecularMaterial"), 1, specularMaterial, 0);
 		checkGlError("set diffuse material");
 	}
@@ -254,7 +254,7 @@ public class Mesh {
 	}
 
 	private void enableTexture() {
-		vertices.position(4);
+		vertices.position(getNormalOffset());
 		GLES20.glVertexAttribPointer(handles.get("aTextureCoord"), TEXCOORDS_SIZE, GLES20.GL_FLOAT,
 				false, vertexSize, vertices);
 		checkGlError("texture vertex attrib pointer");

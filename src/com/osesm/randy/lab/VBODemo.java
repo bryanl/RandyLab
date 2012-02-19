@@ -191,8 +191,8 @@ public class VBODemo extends Simulation {
 			mesh.setIndices(triangleIndices, 0, triangleIndices.length);
 			mesh.setTexture(texture);
 	
-			simulation.debug("translate: " + Arrays.toString(mesh.getModelMatrix().getFloatArray()));
-			float[] values = mesh.getModelMatrix().getFloatArray();
+			simulation.debug("translate: " + Arrays.toString(mesh.getModelMatrix().asFloatArray()));
+			float[] values = mesh.getModelMatrix().asFloatArray();
 			Matrix.translateM(values, 0, 0, 1, 0f);
 			simulation.debug("translate: " + Arrays.toString(values));
 			
