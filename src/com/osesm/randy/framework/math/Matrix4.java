@@ -1,6 +1,7 @@
 package com.osesm.randy.framework.math;
 
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 
 import android.opengl.Matrix;
 
@@ -23,9 +24,9 @@ public class Matrix4 {
 	public static final int M32 = 11;
 	public static final int M33 = 15;
 
-	private final float values[] = new float[16];
-	private final float tmp[] = new float[16];
-
+	private final float _floatArray[] = new float[16];
+	private float tmp[] = new float[16];
+	
 	public Matrix4() {
 		identity();
 	}
@@ -35,61 +36,41 @@ public class Matrix4 {
 	}
 	
 	public Matrix4 identity() {
-		this.values[0] = 1;
-		this.values[1] = 0;
-		this.values[2] = 0;
-		this.values[3] = 0;
-
-		this.values[4] = 0;
-		this.values[5] = 1;
-		this.values[6] = 0;
-		this.values[7] = 0;
-
-		this.values[8] = 0;
-		this.values[9] = 0;
-		this.values[10] = 1;
-		this.values[11] = 0;
-
-		this.values[12] = 0;
-		this.values[13] = 0;
-		this.values[14] = 0;
-		this.values[15] = 1;
-		
+		Matrix.setIdentityM(_floatArray, 0);		
 		return this;
 	}
 
-
-	public void set(float[] values) {
-		this.values[M00] = values[M00];
-		this.values[M10] = values[M10];
-		this.values[M20] = values[M20];
-		this.values[M30] = values[M30];
-		this.values[M01] = values[M01];
-		this.values[M11] = values[M11];
-		this.values[M21] = values[M21];
-		this.values[M31] = values[M31];
-		this.values[M02] = values[M02];
-		this.values[M12] = values[M12];
-		this.values[M22] = values[M22];
-		this.values[M32] = values[M32];
-		this.values[M03] = values[M03];
-		this.values[M13] = values[M13];
-		this.values[M23] = values[M23];
-		this.values[M33] = values[M33];
+	public void set(float[] floatArray) {
+		this._floatArray[M00] = floatArray[M00];
+		this._floatArray[M10] = floatArray[M10];
+		this._floatArray[M20] = floatArray[M20];
+		this._floatArray[M30] = floatArray[M30];
+		this._floatArray[M01] = floatArray[M01];
+		this._floatArray[M11] = floatArray[M11];
+		this._floatArray[M21] = floatArray[M21];
+		this._floatArray[M31] = floatArray[M31];
+		this._floatArray[M02] = floatArray[M02];
+		this._floatArray[M12] = floatArray[M12];
+		this._floatArray[M22] = floatArray[M22];
+		this._floatArray[M32] = floatArray[M32];
+		this._floatArray[M03] = floatArray[M03];
+		this._floatArray[M13] = floatArray[M13];
+		this._floatArray[M23] = floatArray[M23];
+		this._floatArray[M33] = floatArray[M33];
 	}
 
 	public Matrix4 rotate(float angle, float scaleX, float scaleY, float scaleZ) {
-		Matrix.setRotateM(values, 0, angle, scaleX, scaleY, scaleZ);
+		Matrix.setRotateM(_floatArray, 0, angle, scaleX, scaleY, scaleZ);
 		return this;
 	}
 
 	public Matrix4 multiplyByMatrix(Matrix4 otherMatrix) {
-		Matrix.multiplyMM(tmp, 0, values, 0, otherMatrix.values(), 0);
+		Matrix.multiplyMM(tmp, 0, _floatArray, 0, otherMatrix.getFloatArray(), 0);
 		return new Matrix4(tmp);
 	}
 
-	public float[] values() {
-		return values;
+	public float[] getFloatArray() {
+		return _floatArray;
 	}
 
 	public FloatBuffer toFloatBuffer() {
@@ -97,4 +78,9 @@ public class Matrix4 {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		return Arrays.toString(getFloatArray());
+	}
+	
 }

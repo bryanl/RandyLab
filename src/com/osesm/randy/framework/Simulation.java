@@ -61,6 +61,7 @@ public abstract class Simulation extends Activity implements Renderer, OnTouchLi
 		glView = new SimulationView(this);
 		glView.setEGLContextClientVersion(2);
 		glView.setRenderer(this);
+		glView.setOnTouchListener(this);
 	
 		setContentView(glView);
 

@@ -53,7 +53,7 @@ public class SimulationTest extends Simulation {
 			for (Shape shape : shapes) {
 				if (shouldRotate) 
 					shape.setAngle(shape.getId() % 2 == 0 ? angle : -angle);
-				shape.setProjectionMatrix(camera.getViewProjectionMatrix());
+				shape.setViewProjectionMatrix(camera.getViewProjectionMatrix());
 				shape.update();
 				shape.draw();
 			}

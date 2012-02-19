@@ -9,7 +9,7 @@ import android.widget.ListView;
 
 public class RandyLabActivity extends ListActivity {
    
-	String tests[] = {"HelloGLDemo", "VBODemo"};
+	String tests[] = {"HelloGLDemo", "VBODemo", "rts.RTS"};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

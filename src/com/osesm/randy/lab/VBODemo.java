@@ -62,7 +62,7 @@ public class VBODemo extends Simulation {
 			{
 
 				
-				shape2.setProjectionMatrix(camera.getViewProjectionMatrix());
+				shape2.setViewProjectionMatrix(camera.getViewProjectionMatrix());
 				shape2.update();
 				shape2.draw();
 
@@ -191,8 +191,8 @@ public class VBODemo extends Simulation {
 			mesh.setIndices(triangleIndices, 0, triangleIndices.length);
 			mesh.setTexture(texture);
 	
-			simulation.debug("translate: " + Arrays.toString(mesh.modelMatrix().values()));
-			float[] values = mesh.modelMatrix().values();
+			simulation.debug("translate: " + Arrays.toString(mesh.getModelMatrix().getFloatArray()));
+			float[] values = mesh.getModelMatrix().getFloatArray();
 			Matrix.translateM(values, 0, 0, 1, 0f);
 			simulation.debug("translate: " + Arrays.toString(values));
 			

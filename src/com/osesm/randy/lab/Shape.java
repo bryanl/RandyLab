@@ -1,18 +1,22 @@
 package com.osesm.randy.lab;
 
+import android.opengl.Matrix;
+
 import com.osesm.randy.framework.WorldObject;
 import com.osesm.randy.framework.gl.Mesh;
+import com.osesm.randy.framework.math.Matrix4;
 
 public class Shape extends WorldObject {
 
-	private float angle;
+	private float angle = 0;
+	int counter = 0;
 
 	public Shape(Mesh mesh, String vertexShader, String fragmentShader) {
 		super();
-		
+
 		setFragmentShader(fragmentShader);
 		setVertexShader(vertexShader);
-		
+
 		setMesh(mesh);
 	}
 
@@ -33,12 +37,16 @@ public class Shape extends WorldObject {
 
 	@Override
 	public void update() {
-		getMesh().modelMatrix().rotate(angle, 0, 0, 1.0f);
-		getMesh().prepare(getProjectionMatrix());
+		getMesh().setupVBO(getViewProjectionMatrix());
 	}
 
 	@Override
 	public void draw() {
 		getMesh().draw();
+	}
+	
+	public void setScale(float scale) {
+		Matrix4 modelMatrix = getMesh().getModelMatrix();
+		Matrix.scaleM(modelMatrix.getFloatArray(), 0, scale, 0, 0);
 	}
 }

@@ -35,5 +35,10 @@
             android:name=".VBODemo"
             android:label="VBO Demo" >
         </activity>
+        
+        <activity
+            android:name=".rts.RTS"
+            android:label="RTS">            
+        </activity>
     </application>
 </manifest>

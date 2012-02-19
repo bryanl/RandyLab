@@ -16,7 +16,7 @@ public abstract class WorldObject {
 	}
 
 	private Mesh mesh;
-	private Matrix4 projectionMatrix = new Matrix4();
+	private Matrix4 viewProjectionMatrix = new Matrix4();
 
 	private String vertexShader;
 	private String fragmentShader;
@@ -34,12 +34,12 @@ public abstract class WorldObject {
 		return mesh;
 	}
 
-	public void setProjectionMatrix(Matrix4 matrix) {
-		projectionMatrix = matrix;
+	public void setViewProjectionMatrix(Matrix4 matrix) {
+		viewProjectionMatrix = matrix;
 	}
 
-	public Matrix4 getProjectionMatrix() {
-		return projectionMatrix;
+	public Matrix4 getViewProjectionMatrix() {
+		return viewProjectionMatrix;
 	}
 
 	public String getVertexShader() {

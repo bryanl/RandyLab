@@ -5,7 +5,7 @@ import android.opengl.Matrix;
 import com.osesm.randy.framework.math.Matrix4;
 import com.osesm.randy.framework.math.Vector3;
 
-public class Camera {
+public class StationaryCamera {
 
 	private int height;
 	private int width;
@@ -18,7 +18,7 @@ public class Camera {
 	
 	private float angle = 0;
 
-	public Camera(int width, int height) {
+	public StationaryCamera(int width, int height) {
 		this.width = width;
 		this.height = height;
 
@@ -82,7 +82,7 @@ public class Camera {
 
 		angle = 0.5f;
 
-		Matrix.rotateM(viewMatrix.getFloatArray(), 0, angle, 0f, 1f, 0f);
+//		Matrix.rotateM(viewMatrix.values(), 0, angle, 0f, 1f, 0f);
 
 		
 		return viewMatrix;

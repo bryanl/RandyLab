@@ -30,38 +30,42 @@ public class Mesh {
 	private Texture texture;
 
 	Map<String, Integer> handles;
-	
+
 	private Matrix4 modelMatrix = new Matrix4();
-	private Matrix4 mMVPMatrix = new Matrix4();
+	private Matrix4 mvpMatrix = new Matrix4();
 
 	private Simulation simulation;
 
 	private int drawStyle;
-		
-	private static final int VERTICES_OFFSET = 0;
-	private static final int UV_OFFSET = 3;
-	private static final int COLOR_OFFSET = 3;
+
 	protected static final int FLOAT_SIZE = 4;
+
+	private static final int COLOR_SIZE = 4;
+	private static final int TEXCOORDS_SIZE = 2;
+	private static final int NORMAL_SIZE = 3;
+
+	private static final int POSITION_SIZE = 3;
 
 	public Mesh(Simulation simulation, int maxVertices, int maxIndices, boolean hasColor,
 			boolean hasTexCoords, boolean hasNormals) {
 		this.simulation = simulation;
 		shaderCompiler = simulation.getShaderCompiler();
-			
+
 		handles = new HashMap<String, Integer>();
 
 		this.hasColor = hasColor;
 		this.hasTexCoords = hasTexCoords;
 		this.hasNormals = hasNormals;
-		vertexSize = (3 + (hasColor ? 4 : 0) + (hasTexCoords ? 2 : 0) + (hasNormals ? 3
-				: 0)) * FLOAT_SIZE;
+		vertexSize = (POSITION_SIZE + (hasColor ? COLOR_SIZE : 0)
+				+ (hasTexCoords ? TEXCOORDS_SIZE : 0) + (hasNormals ? NORMAL_SIZE : 0))
+				* FLOAT_SIZE;
 		tmpBuffer = new int[maxVertices * vertexSize / FLOAT_SIZE];
 
 		simulation.debug("vertex size = " + vertexSize);
 
 		initializeVertices(maxVertices);
 		initializeIndices(maxIndices);
-		
+
 		drawStyle = GLES20.GL_TRIANGLES;
 	}
 
@@ -85,7 +89,7 @@ public class Mesh {
 
 	public void setVertices(float[] vertices, int offset, int length) {
 		simulation.debug("set vertices to: " + Arrays.toString(vertices));
-		
+
 		this.vertices.clear();
 		int len = offset + length;
 		for (int i = offset, j = 0; i < len; i++, j++)
@@ -96,7 +100,7 @@ public class Mesh {
 
 	public void setIndices(short[] indices, int offset, int length) {
 		simulation.debug("set indices to: " + Arrays.toString(indices));
-		
+
 		this.indices.clear();
 		this.indices.put(indices, offset, length);
 		this.indices.flip();
@@ -126,28 +130,48 @@ public class Mesh {
 		return hasNormals;
 	}
 
-	public void prepare(Matrix4 viewProjectionMatrix) {
-		handles.put("aPosition", GLES20.glGetAttribLocation(program, "aPosition"));
+	public void setupVBO(Matrix4 viewProjectionMatrix) {
+		registerAttribute("aPosition");
 
-		if (hasTexture()) {
-			handles.put("aTextureCoord", GLES20.glGetAttribLocation(program, "aTextureCoord"));
-			handles.put("sTexture", GLES20.glGetAttribLocation(program, "sTexture"));
-		} else {
-			handles.put("aColor", GLES20.glGetAttribLocation(program, "SourceColor"));
+		if (hasColor) {
+			registerAttribute("aSourceColor");
+		}
+		
+		if (hasTexCoords) {
+			registerAttribute("aTextureCoord");
+			registerAttribute("sTexture");
 		}
 
-		handles.put("uMVPMatrix", GLES20.glGetUniformLocation(program, "uMVPMatrix"));
-		mMVPMatrix = viewProjectionMatrix.multiplyByMatrix(modelMatrix);
+		if (hasNormals) {
+			registerAttribute("aNormal");
+			registerAttribute("aDiffuseMaterial");
+			registerUniform("uNormalMatrix");
+			registerUniform("uLightPosition");
+			registerUniform("uAmbientMaterial");
+			registerUniform("uSpecularMaterial");
+			registerUniform("uShininess");
+		}
+
+		registerUniform("uMVPMatrix");
+		mvpMatrix = viewProjectionMatrix.multiplyByMatrix(modelMatrix);		
 	}
 
-	public Matrix4 modelMatrix() {
+	public void registerAttribute(String name) {
+		handles.put(name, GLES20.glGetAttribLocation(program, name));
+	}
+
+	public void registerUniform(String name) {
+		handles.put(name, GLES20.glGetUniformLocation(program, name));
+	}
+
+	public Matrix4 getModelMatrix() {
 		return modelMatrix;
 	}
-	
+
 	public void setDrawStyle(int drawStyle) {
 		this.drawStyle = drawStyle;
 	}
-	
+
 	public int getDrawStyle() {
 		return drawStyle;
 	}
@@ -155,34 +179,27 @@ public class Mesh {
 	public void draw() {
 		GLES20.glUseProgram(program);
 
-		if (hasTexture()) {
+		if (hasTexture())
 			getTexture().bind();
-		}
 
-		vertices.position(VERTICES_OFFSET);
-		GLES20.glVertexAttribPointer(handles.get("aPosition"), 3, GLES20.GL_FLOAT, false,
+		vertices.position(getPositionOffset());
+		GLES20.glVertexAttribPointer(handles.get("aPosition"), POSITION_SIZE, GLES20.GL_FLOAT, false,
 				vertexSize, vertices);
 		checkGlError("position vertex attrib pointer");
 		GLES20.glEnableVertexAttribArray(handles.get("aPosition"));
 		checkGlError("enable position vertex array");
+		
+		if (hasColor)
+			enableColor();
 
-		if (hasColor) {
-			vertices.position(COLOR_OFFSET);
-			GLES20.glVertexAttribPointer(handles.get("aColor"), 4, GLES20.GL_FLOAT, false,
-					vertexSize, vertices);
-			checkGlError("color vertex attrib pointer");
-			GLES20.glEnableVertexAttribArray(handles.get("aColor"));
-			checkGlError("enable color vertex array");
-		} else if (hasTexCoords) {
-			vertices.position(UV_OFFSET);
-			GLES20.glVertexAttribPointer(handles.get("aTextureCoord"), 2, GLES20.GL_FLOAT, false,
-					vertexSize, vertices);
-			checkGlError("texture vertex attrib pointer");
-			GLES20.glEnableVertexAttribArray(handles.get("aTextureCoord"));
-			checkGlError("enable texture vertex array");
-		}
+		if (hasTexCoords)
+			enableTexture();
 
-		GLES20.glUniformMatrix4fv(handles.get("uMVPMatrix"), 1, false, mMVPMatrix.values(), 0);
+		if (hasNormals)
+			enableNormals();
+
+		GLES20.glUniformMatrix4fv(handles.get("uMVPMatrix"), 1, false,
+				mvpMatrix.getFloatArray(), 0);
 
 		if (indices == null) {
 			GLES20.glDrawArrays(drawStyle, 0, vertices.limit());
@@ -192,6 +209,83 @@ public class Mesh {
 					indices);
 			checkGlError("drawElements");
 		}
+	}
+
+	private void enableNormals() {
+		vertices.position(6);
+		GLES20.glVertexAttribPointer(handles.get("aNormal"), NORMAL_SIZE, GLES20.GL_FLOAT, false,
+				vertexSize, vertices);
+		checkGlError("normal vertex attrib pointer");
+		GLES20.glEnableVertexAttribArray(handles.get("aNormal"));
+		checkGlError("enable normal vertex array");
+
+		GLES20.glVertexAttrib4f(handles.get("aDiffuseMaterial"), 0.75f, 0.75f, 0.75f, 1);
+		checkGlError("set diffuse material");
+
+		float normalMatrix[] = { 0, -5, -10 };
+		GLES20.glUniformMatrix3fv(handles.get("uNormalMatrix"), 1, false, normalMatrix, 0);
+		checkGlError("set diffuse material");
+
+		float lightPosition[] = { 2f, 0.25f, 1 };
+		GLES20.glUniform3f(handles.get("uLightPosition"), lightPosition[0],
+				lightPosition[1], lightPosition[2]);
+		checkGlError("set diffuse material");
+
+		float ambientMaterial[] = { 0.1f, 0.1f, 0.1f };
+		GLES20.glUniform3f(handles.get("uAmbientMaterial"), ambientMaterial[0],
+				ambientMaterial[1], ambientMaterial[2]);
+		checkGlError("set diffuse material");
+		
+		GLES20.glUniform1f(handles.get("uShininess"), 19);
+		checkGlError("set diffuse material");
+
+		float specularMaterial[] = { 0, 0.2f, 0 };
+		GLES20.glUniform3fv(handles.get("uSpecularMaterial"), 1, specularMaterial, 0);
+		checkGlError("set diffuse material");
+	}
+
+	private void enableColor() {
+		vertices.position(getColorOffset());
+		GLES20.glVertexAttribPointer(handles.get("aSourceColor"), COLOR_SIZE, GLES20.GL_FLOAT,
+				false, vertexSize, vertices);
+		checkGlError("color vertex attrib pointer");
+		GLES20.glEnableVertexAttribArray(handles.get("aSourceColor"));
+		checkGlError("enable color vertex array");
+	}
+
+	private void enableTexture() {
+		vertices.position(4);
+		GLES20.glVertexAttribPointer(handles.get("aTextureCoord"), TEXCOORDS_SIZE, GLES20.GL_FLOAT,
+				false, vertexSize, vertices);
+		checkGlError("texture vertex attrib pointer");
+		GLES20.glEnableVertexAttribArray(handles.get("aTextureCoord"));
+		checkGlError("enable texture vertex array");
+	}
+
+	private int getPositionOffset() {
+		return 0;
+	}
+
+	private int getColorOffset() {
+		return hasColor() ? POSITION_SIZE : 0;
+	}
+
+	private int getTextureOffset() {
+		if (hasColor)
+			return getColorOffset() + COLOR_SIZE;
+		else if (hasTexCoords)
+			return getColorOffset();
+		else
+			return 0;
+	}
+
+	private int getNormalOffset() {
+		if (hasTexCoords)
+			return getTextureOffset() + TEXCOORDS_SIZE;
+		else if (hasNormals)
+			return getTextureOffset();
+		else
+			return 0;
 	}
 
 	private void checkGlError(String op) {
